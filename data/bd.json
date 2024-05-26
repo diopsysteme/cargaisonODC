@@ -1,0 +1,361 @@
+{
+    "cargo": [
+        {
+            "libelle": "air1",
+            "depart": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "arrive": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "limite": "poids",
+            "limiteValue": 22.9,
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": 1000,
+            "tarif": 0,
+            "produits": [
+                {
+                    "libelle": "Pomme",
+                    "poids": 2,
+                    "id": 0
+                },
+                {
+                    "libelle": "Vase",
+                    "poids": 2,
+                    "id": 0
+                },
+                {
+                    "libelle": "Table",
+                    "poids": 2,
+                    "id": 0
+                }
+            ],
+            "id": 1,
+            "type": "Aerienne"
+        },
+        {
+            "libelle": "mare1",
+            "depart": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "arrive": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "limite": "poids",
+            "limiteValue": 22.9,
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": 1500,
+            "tarif": 0,
+            "produits": [
+                {
+                    "libelle": "Pomme",
+                    "poids": 2,
+                    "id": 0
+                },
+                {
+                    "libelle": "Acide",
+                    "poids": 2,
+                    "id": 0,
+                    "toxicite": 3
+                },
+                {
+                    "libelle": "Table",
+                    "poids": 2,
+                    "id": 0
+                }
+            ],
+            "id": 2,
+            "type": "Maritime"
+        },
+        {
+            "libelle": "rout1",
+            "depart": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "arrive": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "limite": "poids",
+            "limiteValue": 22.9,
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": 800,
+            "tarif": 0,
+            "produits": [
+                {
+                    "libelle": "Pomme",
+                    "poids": 2,
+                    "id": 0
+                },
+                {
+                    "libelle": "Vase",
+                    "poids": 2,
+                    "id": 0
+                },
+                {
+                    "libelle": "Table",
+                    "poids": 2,
+                    "id": 0
+                }
+            ],
+            "id": 3,
+            "type": "Routiere"
+        },
+        {
+            "libelle": "Atque quaerat et eos",
+            "depart": [
+                null,
+                null
+            ],
+            "arrive": [
+                null,
+                null
+            ],
+            "limite": "nbprod",
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": "40",
+            "tarif": 0,
+            "produits": [],
+            "id": 4,
+            "type": "Routiere"
+        },
+        {
+            "libelle": "air1",
+            "depart": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "arrive": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "limite": "poids",
+            "limiteValue": 22.9,
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": 1000,
+            "tarif": 0,
+            "produits": [
+                {
+                    "libelle": "Pomme",
+                    "poids": 2,
+                    "id": 0
+                },
+                {
+                    "libelle": "Vase",
+                    "poids": 2,
+                    "id": 0
+                },
+                {
+                    "libelle": "Table",
+                    "poids": 2,
+                    "id": 0
+                }
+            ],
+            "id": 5,
+            "type": "Aerienne"
+        },
+        {
+            "libelle": "mare1",
+            "depart": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "arrive": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "limite": "poids",
+            "limiteValue": 22.9,
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": 1500,
+            "tarif": 0,
+            "produits": [
+                {
+                    "libelle": "Pomme",
+                    "poids": 2,
+                    "id": 0
+                },
+                {
+                    "libelle": "Acide",
+                    "poids": 2,
+                    "id": 0,
+                    "toxicite": 3
+                },
+                {
+                    "libelle": "Table",
+                    "poids": 2,
+                    "id": 0
+                }
+            ],
+            "id": 6,
+            "type": "Maritime"
+        },
+        {
+            "libelle": "rout1",
+            "depart": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "arrive": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "limite": "poids",
+            "limiteValue": 22.9,
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": 800,
+            "tarif": 0,
+            "produits": [
+                {
+                    "libelle": "Pomme",
+                    "poids": 2,
+                    "id": 0
+                },
+                {
+                    "libelle": "Vase",
+                    "poids": 2,
+                    "id": 0
+                },
+                {
+                    "libelle": "Table",
+                    "poids": 2,
+                    "id": 0
+                }
+            ],
+            "id": 7,
+            "type": "Routiere"
+        },
+        {
+            "libelle": "Eaque aspernatur fac",
+            "depart": [
+                "Dakar",
+                "1985-02-08"
+            ],
+            "arrive": [
+                "Commune de S\u00e9bikhotane",
+                "1995-06-19"
+            ],
+            "limite": "poids",
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": "36.19",
+            "tarif": 0,
+            "produits": [],
+            "id": 8,
+            "type": "Aerienne"
+        },
+        {
+            "libelle": "air1",
+            "depart": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "arrive": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "limite": "poids",
+            "limiteValue": 22.9,
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": 1000,
+            "tarif": 0,
+            "produits": [],
+            "id": 9,
+            "type": "Aerienne"
+        },
+        {
+            "libelle": "mare1",
+            "depart": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "arrive": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "limite": "poids",
+            "limiteValue": 22.9,
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": 1500,
+            "tarif": 0,
+            "produits": [],
+            "id": 10,
+            "type": "Maritime"
+        },
+        {
+            "libelle": "air1",
+            "depart": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "arrive": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "limite": "poids",
+            "limiteValue": 22.9,
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": 1000,
+            "tarif": 0,
+            "produits": [],
+            "id": 11,
+            "type": "Aerienne"
+        },
+        {
+            "libelle": "mare1",
+            "depart": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "arrive": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "limite": "poids",
+            "limiteValue": 22.9,
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": 1500,
+            "tarif": 0,
+            "produits": [],
+            "id": 12,
+            "type": "Maritime"
+        },
+        {
+            "libelle": "rout1",
+            "depart": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "arrive": [
+                "dakar",
+                "2024\/02\/02"
+            ],
+            "limite": "poids",
+            "limiteValue": 22.9,
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": 800,
+            "tarif": 0,
+            "produits": [],
+            "id": 13,
+            "type": "Routiere"
+        }
+    ],
+    "users": []
+}
