@@ -51,8 +51,17 @@ export class Cargaison {
         this.tarif = value;
     }
     ajouterProduit(produit) {
-        if (this.produits.length >= 10) {
-            console.log("La cargaison est pleine. Impossible d'ajouter plus de produits.");
+        if (this.limite == "poids") {
+            const poidsTotal = this.produits.reduce((total, produit) => total + produit.getPoids(), 0);
+            const poidsNouveauProduit = produit.getPoids();
+            console.log(poidsTotal);
+            if (poidsTotal + poidsNouveauProduit > this.limiteValue) {
+                alert("Impossible d'ajouter le produit. La cargaison atteindra sa limite de poids.");
+                return;
+            }
+        }
+        else if (this.produits.length >= this.limiteValue) {
+            alert("La cargaison est pleine. Impossible d'ajouter plus de produits.");
             return;
         }
         const coutProduit = this.calculerFrais(produit);
@@ -160,9 +169,14 @@ export class Routiere extends Cargaison {
 export class Produit {
     set ids(id) { this.id = id; }
     get idg() { return this.id; }
-    constructor(libelle, poids) {
+    get getCode() { return this.code; }
+    set setCode(code) { this.code = code; }
+    constructor(libelle, poids, sender, receiver) {
         this.libelle = libelle;
         this.poids = poids;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.code = "";
         this.id = 0;
     }
     getLibelle() {
@@ -177,6 +191,18 @@ export class Produit {
     setPoids(poids) {
         this.poids = poids;
     }
+    set setSender(sender) {
+        this.sender = sender;
+    }
+    get getSender() {
+        return this.sender;
+    }
+    set setReceiver(receiver) {
+        this.receiver = receiver;
+    }
+    getReceiver() {
+        return this.receiver;
+    }
 }
 //
 export class Alimentaire extends Produit {
@@ -187,8 +213,8 @@ export class Alimentaire extends Produit {
 }
 //
 export class Chimique extends Produit {
-    constructor(libelle, poids, toxicite) {
-        super(libelle, poids);
+    constructor(libelle, poids, toxicite, sender, receiver) {
+        super(libelle, poids, sender, receiver);
         this.toxicite = toxicite;
     }
     getToxicite() {
@@ -205,8 +231,8 @@ export class Chimique extends Produit {
 }
 //
 export class Materiel extends Produit {
-    constructor(libelle, poids) {
-        super(libelle, poids);
+    constructor(libelle, poids, sender, receiver) {
+        super(libelle, poids, sender, receiver);
     }
 }
 //
@@ -223,5 +249,23 @@ export class Incassable extends Materiel {
         let inf = `Incassable: ${this.libelle}, Poids: ${this.poids}`;
         return inf;
         console.log(`Incassable: ${this.libelle}, Poids: ${this.poids}`);
+    }
+}
+export class client {
+    constructor(nom, prenom, adresse, mail, telephone) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.adresse = adresse;
+        this.mail = mail;
+        this.telephone = telephone;
+    }
+    get getObjet() {
+        return {
+            nom: this.nom,
+            prenom: this.prenom,
+            adresse: this.adresse,
+            mail: this.mail,
+            telephone: this.telephone,
+        };
     }
 }

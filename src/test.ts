@@ -1,11 +1,8 @@
 
-import { Cargaison, Aerienne, Maritime, Routiere, Alimentaire, Chimique, Materiel, Fragile, Incassable } from './models/Cargaison.js';
+import { Cargaison, Aerienne, Maritime, Routiere, Alimentaire, Chimique, Materiel, Fragile, Incassable, client } from './models/Cargaison.js';
 declare var bd: any;
 var cargaisons: Cargaison[] = bd.cargo;
-async function addTab(carg: any[], cargaison: any) {
-  cargaison.ids = carg.length + 1;
-  carg.unshift(cargaison.getObjet)
-  console.log(bd);
+async function saveCargaison(bd: {cargo:any[],user:any[]}) {
   try {
     const response = await fetch('./save.php', {
       method: 'POST',
@@ -24,21 +21,31 @@ async function addTab(carg: any[], cargaison: any) {
   } catch (error) {
     console.error('There was a problem with the fetch operation:', error);
   }
+}
+ function addTab(carg: any[], cargaison: any) {
+
+  const newId: number = carg.reduce((maxId, cargo) => Math.max(maxId, cargo.id), 0) + 1;
+
+  cargaison.ids = newId;
+  carg.unshift(cargaison.getObjet)
+  console.log(bd);
+  saveCargaison(bd);
   paginate(cargaisons, 1, 2, table, returCarg);
 }
 const aerienne = new Aerienne(1000, "air1", ["dakar", "2024/02/02"], ["dakar", "2024/02/02"], "poids", 22.9);
 console.log(aerienne);
+
 
 // addTab(cargaisons, aerienne)
 const maritime = new Maritime(1500, "mare1", ["dakar", "2024/02/02"], ["dakar", "2024/02/02"], "poids", 22.9);
 // addTab(cargaisons, maritime)
 const routiere = new Routiere(800, "rout1", ["dakar", "2024/02/02"], ["dakar", "2024/02/02"], "poids", 22.9);
 // addTab(cargaisons, routiere)
-
-const produit1 = new Alimentaire('Pomme', 2);
-const produit2 = new Chimique('Acide', 2, 3);
-const produit3 = new Fragile('Vase', 2);
-const produit4 = new Incassable('Table', 2);
+const clien = new client("nonm", "prenom", "dakar", "mail", 777777777)
+const produit1 = new Alimentaire('Pomme', 2, clien, clien);
+const produit2 = new Chimique('Acide', 2, 3, clien, clien);
+const produit3 = new Fragile('Vase', 2, clien, clien);
+const produit4 = new Incassable('Table', 2, clien, clien);
 aerienne.ajouterProduit(produit1);
 aerienne.ajouterProduit(produit2); // Doit afficher un message d'erreur
 aerienne.ajouterProduit(produit3);
@@ -77,19 +84,19 @@ function carg(cargaison: Cargaison) {
 }
 
 function afficherCargaisonMaritime(container: Cargaison, where: HTMLDivElement) {
-  // Création de l'élément div pour la cargaison maritime
+
   const divCargaison = document.createElement('div');
   divCargaison.classList.add('bg-gray-200', 'p-4', 'rounded-lg');
-  // Ajout du titre "Cargaison Maritime"
+
   const titre = document.createElement('h3');
   titre.classList.add('text-xl', 'font-semibold', 'mb-2');
   titre.textContent = "Cargaison " + container.getType;
   divCargaison.appendChild(titre);
-  // Ajout de la distance
+
   const distanceParagraphe = document.createElement('p');
   distanceParagraphe.textContent = `Distance: ${container.getdistance()} km`;
   divCargaison.appendChild(distanceParagraphe);
-  // Si des produits sont disponibles, les ajouter à la liste
+
   if (container.nbProduit() > 0) {
     const titreProduits = document.createElement('h4');
     titreProduits.classList.add('text-lg', 'font-semibold', 'mt-4');
@@ -107,16 +114,13 @@ function afficherCargaisonMaritime(container: Cargaison, where: HTMLDivElement) 
     divCargaison.appendChild(listeProduits);
     console.log(listeProduits);
   } else {
-    // Si aucun produit n'est disponible, afficher un message
     const aucunProduit = document.createElement('p');
     aucunProduit.textContent = 'Aucun produit disponible pour cette cargaison.';
     divCargaison.appendChild(aucunProduit);
     console.log(aucunProduit);
   }
-  // Ajout de la cargaison maritime à l'élément conteneur
   where.appendChild(divCargaison);
 }
-
 
 
 function getFormData(form: HTMLFormElement) {
@@ -127,6 +131,7 @@ function getFormData(form: HTMLFormElement) {
     let input = inputs[i] as HTMLInputElement;
 
     if (input.type != "button" && input.type !== "submit") {
+      // console.log(input.name+":"+input.value)
       formData[input.name] = input.value;
     }
   }
@@ -145,19 +150,18 @@ let cargForm = document.getElementById("addCargForm")! as HTMLFormElement; cargF
     displayErrors(errors);
   } else {
     console.log(formData);
-    // Ajout de la cargaison à la liste des cargaisons
     let carga;
     if (formData.type === 'Aerienne') {
-      carga = new Aerienne(formData.distance, formData.libelle, [formData.lieu_depart, formData.dateDep], [formData.lieu_arrivee, formData.dateAr], formData.limite, formData.limite_value) as Aerienne;
+      carga = new Aerienne(parseFloat(formData.distance), formData.libelle, [formData.lieu_depart, formData.dateDep], [formData.lieu_arrivee, formData.dateAr], formData.limite, parseFloat(formData.limiteVal)) as Aerienne;
     } else if (formData.type === 'Maritime') {
-      carga = new Maritime(formData.distance, formData.libelle, [formData.lieu_depart, formData.dateDep], [formData.lieu_arrivee, formData.dateAr], formData.limite, formData.limite_value) as Maritime;
+      carga = new Maritime(parseFloat(formData.distance), formData.libelle, [formData.lieu_depart, formData.dateDep], [formData.lieu_arrivee, formData.dateAr], formData.limite, parseFloat(formData.limiteVal)) as Maritime;
     } else if (formData.type === 'Routiere') {
-      carga = new Routiere(formData.distance, formData.libelle, [formData.lieu_depart, formData.dateDep], [formData.lieu_arrivee, formData.dateAr], formData.limite, formData.limite_value) as Routiere;
+      carga = new Routiere(parseFloat(formData.distance), formData.libelle, [formData.lieu_depart, formData.dateDep], [formData.lieu_arrivee, formData.dateAr], formData.limite, parseFloat(formData.limiteVal)) as Routiere;
     }
+    console.log(carga)
     addTab(cargaisons, carga);
 
 
-    // Vider le formulaire
     cargForm.reset();
 
 
@@ -167,19 +171,16 @@ let cargForm = document.getElementById("addCargForm")! as HTMLFormElement; cargF
 function validateForm(data: { [key: string]: any }): { field: string, message: string }[] {
   let errors: { field: string, message: string }[] = [];
 
-  // Check for non-empty fields
   for (let key in data) {
     if (!data[key]) {
       errors.push({ field: key, message: `Le champ ${key} est requis.` });
     }
   }
 
-  // Check for positive distance
   if (data.distance <= 0) {
     errors.push({ field: "distance", message: "La distance doit être supérieure à 0." });
   }
 
-  // Parse dates
   const departureDate = new Date(data.dateDep);
   const arrivalDate = new Date(data.dateAr);
   const currentDate = new Date();
@@ -189,12 +190,10 @@ function validateForm(data: { [key: string]: any }): { field: string, message: s
   const normalizedArrivalDate = normalizeDate(arrivalDate);
   const normalizedCurrentDate = normalizeDate(currentDate);
 
-  // Log dates for debugging
   console.log('Departure Date:', normalizedDepartureDate);
   console.log('Arrival Date:', normalizedArrivalDate);
   console.log('Current Date:', normalizedCurrentDate);
 
-  // Validate dates
   if (isNaN(departureDate.getTime())) {
     errors.push({ field: "dateDep", message: "La date de départ n'est pas valide." });
   } else if (normalizedDepartureDate <= normalizedCurrentDate) {
@@ -225,33 +224,93 @@ function clearErrors() {
     element.textContent = '';
   });
 }
-function afficherTr(tab: any[], table: HTMLTableElement, tr: any) {
+function afficherTr(tab: any[], table: HTMLTableElement, tr: any,index: number) {
   const tbody = table.querySelector('tbody');
   if (!tbody) return;
 
   tbody.innerHTML = ''; // Clear existing rows
 
-  tab.forEach(item => {
-    const row = tr(item);
+  tab.forEach((item) => {
+    const row = tr(item,index);
     tbody.insertAdjacentHTML('beforeend', row);
   });
 }
-function returCarg(cargaison: any): any {
-  let tr = `<tr class="border-b">
-  <td class="p-3 text-gray-700">${cargaison.libelle}</td>
-  <td class="p-3 text-gray-700">${cargaison.depart[0]}</td>
-  <td class="p-3 text-gray-700">${cargaison.arrive[0]}</td>
-  <td class="p-3 text-gray-700">${cargaison.type}</td>
-  <td class="p-3 text-gray-700">${cargaison.etatAvencement}</td>
-  <td class="p-3 text-gray-700 flex space-x-2">
-    <a href="details_cargaison.php?id=1" class="text-blue-500 hover:underline">Détails</a>
-    <button id="${cargaison.idg}" onclick="openModal('addProductModal')" class="text-green-500 hover:underline">Ajouter Produit</button>
+
+function returCarg(cargaison: any, id?: number): any {
+  let part1=`
+  <tr class="border-b">
+    <td class="p-3 text-gray-700">${cargaison.libelle}</td>
+    <td class="p-3 text-gray-700">${cargaison.depart[0]}</td>
+    <td class="p-3 text-gray-700">${cargaison.arrive[0]}</td>
+    <td class="p-3 text-gray-700">${cargaison.type}</td>
+   
+    <td class="p-3 text-gray-700">
+      <label class="inline-flex items-center">
+        <input type="checkbox" class="form-checkbox" ${cargaison.etatCargaison === "ouverte" ? "checked" : ""} >
+        <span class="ml-2">${cargaison.etatCargaison === "ouverte" ? "Ouvert" : "Fermé"}</span>
+      </label>
+    </td>
+    <td class="p-3 text-gray-700 flex space-x-2">
+      <a href="details_cargaison.php?id=${cargaison.id}" class="text-blue-500 hover:underline">Détails</a>
+      <button id="${cargaison.id}" onclick="openModal('addProductModal')" class="text-green-500 hover:underline" name="${id}">Ajouter Produit</button>
+    </td>`
+    let part2=`
+    <td class="p-3 text-gray-700">
+    <select class="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+      <option value="attente" ${cargaison.etatAvencement === "attente" ? "selected" : ""}>En attente</option>
+      <option value="perdu" ${cargaison.etatAvencement === "perdu" ? "selected" : ""}>Perdu</option>
+      <option value="en cours" ${cargaison.etatAvencement === "en cours" ? "selected" : ""}>En cours</option>
+      <option value="arrive" ${cargaison.etatAvencement === "arrive" ? "selected" : ""}>Arrivé</option>
+    </select>
+    <span> ${cargaison.etatAvencement}</span>
   </td>
-</tr>`
-  return tr
+  </tr>
+    `
+  let tr
+  if(cargaison.etatAvencement=="en cours"){
+    part2 =  `
+    <td class="p-3 text-gray-700">
+    <select class="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+      <option value="perdu" ${cargaison.etatAvencement === "perdu" ? "selected" : ""}>Perdu</option>
+      <option value="en cours" ${cargaison.etatAvencement === "en cours" ? "selected" : ""}>En cours</option>
+      <option value="arrive" ${cargaison.etatAvencement === "arrive" ? "selected" : ""}>Arrivé</option>
+      </select>
+      <span> ${cargaison.etatAvencement}</span>
+  </td>
+  </tr>
+    ` 
+  }else if(cargaison.etatAvencement == "arrive"){
+    part2= `
+    <td class="p-3 text-gray-700">
+    <select class="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+      <option value="arrive" ${cargaison.etatAvencement === "arrive" ? "selected" : ""}>Arrivé</option>
+    </select>
+    <span> ${cargaison.etatAvencement}</span>
+  </td>
+  </tr>
+    ` 
+  }else if(cargaison.etatAvencement === "perdu"){
+    part2 =  `
+    <td class="p-3 text-gray-700">
+    <select class="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+      <option value="perdu" ${cargaison.etatAvencement === "perdu" ? "selected" : ""}>Perdu</option>
+      <option value="en cours" ${cargaison.etatAvencement === "en cours" ? "selected" : ""}>En cours</option>
+      <option value="arrive" ${cargaison.etatAvencement === "arrive" ? "selected" : ""}>Arrivé</option>
+    </select>
+    <span> ${cargaison.etatAvencement}</span>
+  </td>
+  </tr>
+    ` 
+  }
+    tr=part1+part2
+    return tr;
+}
+
+function alt() : void{
+  alert("dd")
 }
 const table = document.querySelector('.min-w-full') as HTMLTableElement;
-
+var idCarg = ""
 // Display cargaisons in the table
 function paginateDefault(tab: Cargaison[], npage: number, nel: number, table: HTMLTableElement, tr: (cargaison: Cargaison) => string): void {
   const nombrePage = Math.ceil(tab.length / nel);
@@ -277,7 +336,7 @@ function paginate(tab: Cargaison[], npage: number, nel: number, table: HTMLTable
   console.log(`Displaying items from index ${deb}`);
 
   const etu = tab.slice(deb, deb + nel);
-  afficherTr(etu, table, tr);
+  afficherTr(etu, table, tr,deb);
 
   let paginationContainer = document.querySelector(".pagination") as HTMLElement;
   paginationContainer.innerHTML = generatePaginationLinks(nombrePage, npage);
@@ -304,13 +363,12 @@ function changePage(event: Event, tab: Cargaison[], nel: number, table: HTMLTabl
 
   paginate(tab, npage, nel, table, tr);
 }
-// paginate(cargaisons, 1, 2, table, returCarg);
+
 
 let formFilter = document.getElementById("filterForm")! as HTMLFormElement
 formFilter.addEventListener("submit", function (event) {
   event.preventDefault(); // Empêcher le rechargement de la page
 
-  // Récupérer les valeurs des champs de formulaire
   let data = getFormData(formFilter)
   console.log(data)
   let filteredData: any[] = filterLD(cargaisons, data.l_depart, "depart");
@@ -322,9 +380,120 @@ formFilter.addEventListener("submit", function (event) {
   paginate(filteredData, 1, 2, table, returCarg);
 });
 
+const addP=document.querySelectorAll('.addp') as NodeList
+addP.forEach(element => {
+  element.addEventListener('click', (event: Event) => {
+    let ele = event.target as HTMLElement
+    idCarg = ele.id 
+    alert(idCarg)
 
+  })
+})
+function displayReceipt(prod: any) {
+  const receipt = document.createElement('div');
+  receipt.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 shadow-lg rounded-lg z-50 max-w-sm w-full';
 
+  receipt.innerHTML = `
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-2xl font-bold text-gray-800">Reçu de Transport</h3>
+      <button class="text-gray-500 hover:text-gray-700 close-btn focus:outline-none">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="text-gray-700">
+      <p><span class="font-semibold">Envoyeur:</span> ${prod.sender.nom} ${prod.sender.prenom}</p>
+      <p><span class="font-semibold">Adresse:</span> ${prod.sender.adresse}</p>
+      <p><span class="font-semibold">Email:</span> ${prod.sender.mail}</p>
+      <p><span class="font-semibold">Téléphone:</span> ${prod.sender.telephone}</p>
+      <p><span class="font-semibold">Destinataire:</span> ${prod.receiver.nom} ${prod.receiver.prenom}</p>
+      <p><span class="font-semibold">Adresse:</span> ${prod.receiver.adresse}</p>
+      <p><span class="font-semibold">Email:</span> ${prod.receiver.mail}</p>
+      <p><span class="font-semibold">Téléphone:</span> ${prod.receiver.telephone}</p>
+      <p><span class="font-semibold">Produit:</span> ${prod.libelle}</p>
+      <p><span class="font-semibold">Poids:</span> ${prod.poids}</p>
+      <p><span class="font-semibold">Tarif:</span> ${prod.tarif} F</p>
+    </div>
+  `;
 
+  document.body.appendChild(receipt);
+
+  const closeButton = receipt.querySelector('.close-btn');
+  closeButton?.addEventListener('click', () => {
+    document.body.removeChild(receipt);
+  });
+
+  setTimeout(() => {
+    if (document.body.contains(receipt)) {
+      document.body.removeChild(receipt);
+    }
+  }, 5000);
+}
+
+const addProduct = document.querySelector("#productForm") as HTMLFormElement
+addProduct?.addEventListener("submit", function (event) {
+  event.preventDefault(); 
+
+console.log(bd.cargo)
+const index = bd.cargo.findIndex((car: any) => car.id == idCarg);
+// const cargoData = bd.cargo.find((c: any) => c.id == idCarg) as Cargaison;
+const cargoData = findD(bd.cargo,"id",idCarg);
+const inst:Maritime|Aerienne|Routiere =makeInstance(cargoData)
+console.log(inst)
+console.log(cargoData)
+  let data = getFormData(addProduct)
+  console.log(data);
+ let prod! : Alimentaire|Incassable|Fragile|Chimique
+  if(data.type_produit=="Alimentaire"){
+    prod = new Alimentaire(data.libelle, data.poids, new client(data.sender_nom, data.sender_prenom, data.sender_adresse, data.sender_mail, data.sender_telephone), new client(data.receiver_nom, data.receiver_prenom, data.receiver_adresse, data.receiver_mail, data.receiver_telephone));
+  }
+  else if(data.type_produit=="Incassable"){
+   prod = new Incassable(data.libelle, data.poids, new client(data.sender_nom, data.sender_prenom, data.sender_adresse, data.sender_mail, data.sender_telephone), new client(data.receiver_nom, data.receiver_prenom, data.receiver_adresse, data.receiver_mail, data.receiver_telephone));
+ 
+    // console.log(inst)
+  }else if(data.type_produit=="Fragile"){
+    prod = new Fragile(data.libelle, data.poids, new client(data.sender_nom, data.sender_prenom, data.sender_adresse, data.sender_mail, data.sender_telephone), new client(data.receiver_nom, data.receiver_prenom, data.receiver_adresse, data.receiver_mail, data.receiver_telephone));
+    
+    // console.log(inst)
+  }else if (data.type_produit=="Chimique"){
+    
+    prod = new Chimique(data.libelle, data.poids,1, new client(data.sender_nom, data.sender_prenom, data.sender_adresse, data.sender_mail, data.sender_telephone), new client(data.receiver_nom, data.receiver_prenom, data.receiver_adresse, data.receiver_mail, data.receiver_telephone));
+    
+    // console.log(inst)
+
+  }
+  console.log(prod)
+  
+  const newId: string = generateUniqueCode(4)+"-C"+cargoData.id
+  prod.setCode=newId
+  inst.ajouterProduit(prod)
+ if(inst.getObjet.produits.length==0){
+  return
+ }
+  console.log(cargoData.id)
+  console.log(inst.getObjet.produits.length)
+  bd.cargo[index].produits.push(inst.getObjet.produits)
+  console.log(bd.cargo[index].produits)
+  saveCargaison(bd);
+  displayReceipt(prod);
+})
+console.log(bd.cargo[1].produits)
+function generateUniqueCode(length: number): string {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  const charactersLength = characters.length;
+  
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+
+  return result;
+}
+console.log( generateUniqueCode(5))
+function findD(data:any[],champs:any,value:any):any{
+  return data.find((c: any) => c[champs] == value) as Cargaison;
+}
 
 function filterData(
   cargaisons: any[],
@@ -381,7 +550,20 @@ function filterD(
     return true;
   });
 }
-
+function makeInstance(tab:any):Maritime|Aerienne|Routiere{
+  
+  let instance:Maritime|Aerienne|Routiere;
+  if(tab.type=="Maritime"){
+    instance= new Maritime(parseFloat(tab.distance), tab.libelle, tab.depart, tab.arrive, tab.limite, parseFloat(tab.limiteValue));
+  }
+  else if(tab.type=="Aerienne"){
+    instance= new Aerienne(parseFloat(tab.distance), tab.libelle, tab.depart, tab.arrive, tab.limite, parseFloat(tab.limiteValue));
+  }
+  else{
+    instance= new Routiere(parseFloat(tab.distance), tab.libelle, tab.depart, tab.arrive, tab.limite, parseFloat(tab.limiteValue));
+  }
+  return instance;
+}
 
 
 
@@ -431,3 +613,23 @@ console.log(produit1.info());
 // } else {
 //   console.error('Element with id "type_produit" not found.');
 // }
+
+
+
+const open = document.querySelectorAll<HTMLInputElement>(".etat");
+const avance=document.querySelectorAll<HTMLSelectElement>(".avance")!
+open.forEach(input   => {
+  input.addEventListener("change",()=>{
+    const idCargo = parseInt(input.id)
+    // concole.log(bd.cargo[idCargo].etatCargaison)
+    if(bd.cargo[idCargo].etatCargaison=="fermee"){
+      bd.cargo[idCargo].etatCargaison="ouverte"
+    }
+    else{
+      bd.cargo[idCargo].etatCargaison="fermee"
+    }
+    console.log(bd.cargo[idCargo])
+    saveCargaison(bd);
+    paginate(bd.cargo, 1, 2, table, returCarg);
+  })
+});

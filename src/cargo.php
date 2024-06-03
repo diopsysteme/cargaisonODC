@@ -5,7 +5,7 @@ $jsonContent = file_get_contents(DATAS);
 
 // Décoder le JSON en tableau PHP
 $dataPH = json_decode($jsonContent, true);
-print_r($dataPH)["cargo"];
+// print_r($dataPH)["cargo"];
 ?>
  <script type="module" src="../dist/test.js"></script>
 <script>
@@ -78,7 +78,7 @@ print_r($dataPH)["cargo"];
             <td class="p-3 text-gray-700"><?=$value["etatAvencement"]?></td>
             <td class="p-3 text-gray-700 flex space-x-2">
               <a href="details_cargaison.php?id=1" class="text-blue-500 hover:underline">Détails</a>
-              <button onclick="openModal('addProductModal')" class="text-green-500 hover:underline">Ajouter Produit</button>
+              <button onclick="openModal('addProductModal')" class="text-green-500 addp hover:underline" name="<?=$key?>" id="<?=$value["id"]?>">Ajouter Produit</button>
             </td>
           </tr>
           <?php 
@@ -103,40 +103,112 @@ print_r($dataPH)["cargo"];
 
 
 
-  <div id="addProductModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center hidden">
+  <div id="addProductModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center hidden  ">
+    <button >ferme</button>
     <div class="bg-white rounded-lg shadow-lg p-6 w-1/2">
-      <h2 class="text-2xl font-bold mb-2">Ajouter Produit</h2>
-      <form action="create_produit.php" method="POST">
-        <div class="mb-2">
-          <label for="libelle" class="block text-gray-700">Code</label>
-          <input type="text" id="libelle" name="libelle" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      <h2 class="text-2xl font-bold mb-4">Ajouter Produit</h2>
+      <form id="productForm" >
+        <!-- Step 1: Product Information -->
+        <div id="step1" class="step">
+          <h3 class="text-xl font-bold mb-2">Informations sur le produit</h3>
+          <div class="mb-4">
+            <label for="libelle" class="block text-gray-700">Nom du produit</label>
+            <input type="text" id="libelle" name="libelle" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+          </div>
+          <div class="mb-4">
+            <label for="poids" class="block text-gray-700">Poids</label>
+            <input type="number" id="poids" name="poids" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+          </div>
+          <div class="mb-4">
+            <label for="nombre" class="block text-gray-700">Nombre de produits</label>
+            <input type="number" id="nombre" name="nombre" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+          </div>
+          <div class="mb-4">
+            <label for="type_produit" class="block text-gray-700">Type de produit</label>
+            <select id="type_produit" name="type_produit" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+              <option value="Alimentaire">Alimentaire</option>
+              <option value="Chimique">Chimique</option>
+              <option value="Fragile">Fragile</option>
+              <option value="Incassable">Incassable</option>
+            </select>
+          </div>
+          <div class="flex justify-end space-x-4">
+            <button type="button" onclick="nextStep('step1', 'step2')" class="bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Suivant</button>
+          </div>
         </div>
-        <div class="mb-4">
-          <label for="poids" class="block text-gray-700">Poids</label>
-          <input type="number" id="poids" name="poids" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+
+        <!-- Step 2: Sender Information -->
+        <div id="step2" class="step hidden">
+          <h3 class="text-xl font-bold mb-2">Informations sur l'expéditeur</h3>
+          <div class="mb-4">
+            <label for="sender_nom" class="block text-gray-700">Nom</label>
+            <input type="text" id="sender_nom" name="sender_nom" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+          </div>
+          <div class="mb-4">
+            <label for="sender_prenom" class="block text-gray-700">Prénom</label>
+            <input type="text" id="sender_prenom" name="sender_prenom" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+          </div>
+          <div class="mb-4">
+            <label for="sender_adresse" class="block text-gray-700">Adresse</label>
+            <input type="text" id="sender_adresse" name="sender_adresse" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+          </div>
+          <div class="mb-4">
+            <label for="sender_mail" class="block text-gray-700">Email</label>
+            <input type="email" id="sender_mail" name="sender_mail" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+          </div>
+          <div class="mb-4">
+            <label for="sender_telephone" class="block text-gray-700">Téléphone</label>
+            <input type="tel" id="sender_telephone" name="sender_telephone" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+          </div>
+          <div class="flex justify-between space-x-4">
+            <button type="button" onclick="previousStep('step2', 'step1')" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Précédent</button>
+            <button type="button" onclick="nextStep('step2', 'step3')" class="bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Suivant</button>
+          </div>
         </div>
-        <div class="mb-4">
-          <label for="type_produit" class="block text-gray-700">Type de produit</label>
-          <input type="text" id="type_produit" name="type_produit" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-        </div>
-        <div class="mb-4">
-          <label for="etat" class="block text-gray-700">État</label>
-          <select id="etat" name="etat" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <option value="En attente">En attente</option>
-            <option value="En cours">En cours</option>
-            <option value="Arrivé">Arrivé</option>
-            <option value="Récupéré">Récupéré</option>
-            <option value="Perdu">Perdu</option>
-            <option value="Archivé">Archivé</option>
-          </select>
-        </div>
-        <div class="flex justify-end space-x-4">
-          <button type="button" onclick="closeModal('addProductModal')" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Annuler</button>
-          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Ajouter</button>
+
+        <!-- Step 3: Receiver Information -->
+        <div id="step3" class="step hidden">
+          <h3 class="text-xl font-bold mb-2">Informations sur le destinataire</h3>
+          <div class="mb-4">
+            <label for="receiver_nom" class="block text-gray-700">Nom</label>
+            <input type="text" id="receiver_nom" name="receiver_nom" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+          </div>
+          <div class="mb-4">
+            <label for="receiver_prenom" class="block text-gray-700">Prénom</label>
+            <input type="text" id="receiver_prenom" name="receiver_prenom" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+          </div>
+          <div class="mb-4">
+            <label for="receiver_adresse" class="block text-gray-700">Adresse</label>
+            <input type="text" id="receiver_adresse" name="receiver_adresse" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+          </div>
+          <div class="mb-4">
+            <label for="receiver_mail" class="block text-gray-700">Email</label>
+            <input type="email" id="receiver_mail" name="receiver_mail" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+          </div>
+          <div class="mb-4">
+            <label for="receiver_telephone" class="block text-gray-700">Téléphone</label>
+            <input type="tel" id="receiver_telephone" name="receiver_telephone" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+          </div>
+          <div class="flex justify-between space-x-4">
+            <button type="button" onclick="previousStep('step3', 'step2')" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Précédent</button>
+            <button type="submit" id="ajoutProduit" class="bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Ajouter</button>
+          </div>
         </div>
       </form>
     </div>
   </div>
+
+  <script>
+    function nextStep(currentStepId, nextStepId) {
+      document.getElementById(currentStepId).classList.add('hidden');
+      document.getElementById(nextStepId).classList.remove('hidden');
+    }
+
+    function previousStep(currentStepId, previousStepId) {
+      document.getElementById(currentStepId).classList.add('hidden');
+      document.getElementById(previousStepId).classList.remove('hidden');
+    }
+  </script>
 
   <script>
     function openModal(modalId) {
@@ -144,7 +216,7 @@ print_r($dataPH)["cargo"];
     }
 
     function closeModal(modalId) {
-      document.getElementById(modalId).classList.add('hidden');
+    etElementById(modalId).classList.add('hidden');
     }
   </script>
   <!-- Modal Ajouter Cargaison -->
@@ -320,8 +392,8 @@ function putDistance() {
     function genInp() {
       sele = event.target
       let input = sele.parentNode.querySelector("input")
-      input.id = "sele.value"
-      input.name = "sele.value"
+      input.id = sele.value
+      input.name = sele.value
       if (sele.value == "poids") {
         console.log()
 
@@ -378,4 +450,5 @@ function putDistance() {
     #map {
       height: 300px;
     }
+    
   </style>

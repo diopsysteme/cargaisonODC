@@ -1,152 +1,80 @@
 {
     "cargo": [
         {
-            "libelle": "Sapiente impedit au",
+            "libelle": "Promotion 3",
             "depart": [
-                "M\u00e9dina Tioub",
-                "2024-05-29"
+                "Zyg",
+                "2024-06-03"
             ],
             "arrive": [
-                "Ngomene",
-                "2024-05-31"
-            ],
-            "limite": "nbprod",
-            "etatAvencement": "attente",
-            "etatCargaison": "ouverte",
-            "distance": "25.39",
-            "tarif": 0,
-            "produits": [],
-            "id": 8,
-            "type": "Maritime"
-        },
-        {
-            "libelle": "Promotidd",
-            "depart": [
-                "Dakar",
-                "2024-05-29"
-            ],
-            "arrive": [
-                "Khodeba",
-                "2024-05-31"
+                "Gouraf",
+                "2024-06-04"
             ],
             "limite": "poids",
+            "limiteValue": 222,
             "etatAvencement": "attente",
-            "etatCargaison": "ouverte",
-            "distance": "36.78",
+            "etatCargaison": "fermee",
+            "distance": 901.38,
             "tarif": 0,
             "produits": [],
-            "id": 7,
-            "type": "Maritime"
-        },
-        {
-            "libelle": "ZZZZZZ",
-            "depart": [
-                "Dakar",
-                "2024-05-29"
-            ],
-            "arrive": [
-                "Communaut\u00e9 rurale de Keur Moussa",
-                "2024-05-31"
-            ],
-            "limite": "poids",
-            "etatAvencement": "attente",
-            "etatCargaison": "ouverte",
-            "distance": "42.29",
-            "tarif": 0,
-            "produits": [],
-            "id": 6,
+            "id": 1,
             "type": "Maritime"
         },
         {
             "libelle": "Promotion 3",
             "depart": [
-                "Ndindy",
-                "2024-05-29"
+                "Zyg",
+                "2024-06-03"
             ],
             "arrive": [
-                "Touba",
-                "2024-05-30"
+                "Gouraf",
+                "2024-06-04"
             ],
             "limite": "poids",
+            "limiteValue": 222,
             "etatAvencement": "attente",
             "etatCargaison": "ouverte",
-            "distance": "35.33",
+            "distance": 901.38,
             "tarif": 0,
             "produits": [],
-            "id": 5,
-            "type": "Aerienne"
-        },
-        {
-            "libelle": "Quas impedit maxime",
-            "depart": [
-                "Dakar",
-                "2024-05-28"
-            ],
-            "arrive": [
-                "Touba",
-                "2024-06-28"
-            ],
-            "limite": "nbprod",
-            "etatAvencement": "attente",
-            "etatCargaison": "ouverte",
-            "distance": "168.86",
-            "tarif": 0,
-            "produits": [],
-            "id": 4,
-            "type": "Routiere"
-        },
-        {
-            "libelle": "SSS",
-            "depart": [
-                "Thi\u00e8s",
-                "2024-05-28"
-            ],
-            "arrive": [
-                "Dakar",
-                "2024-05-29"
-            ],
-            "limite": "poids",
-            "etatAvencement": "attente",
-            "etatCargaison": "ouverte",
-            "distance": "58.47",
-            "tarif": 0,
-            "produits": [],
-            "id": 3,
+            "id": 1,
             "type": "Maritime"
         },
         {
-            "libelle": "ZZ",
+            "libelle": "Promotion 3",
             "depart": [
-                "Dakar",
-                "2024-05-28"
+                "Zyg",
+                "2024-06-03"
             ],
             "arrive": [
-                "Thi\u00e8s",
-                "2024-05-31"
+                "Gouraf",
+                "2024-06-04"
             ],
             "limite": "poids",
+            "limiteValue": 222,
             "etatAvencement": "attente",
             "etatCargaison": "ouverte",
-            "distance": "60.05",
+            "distance": 901.38,
             "tarif": 0,
             "produits": [],
-            "id": 2,
+            "id": 1,
             "type": "Maritime"
         },
         {
-            "libelle": "ZZZ",
+            "libelle": "Promotion 3",
             "depart": [
-                "Dakar",
-                "2024-05-28"
+                "Zyg",
+                "2024-06-03"
             ],
             "arrive": [
-                "Thi\u00e8s",
-                "2024-05-31"
+                "Gouraf",
+                "2024-06-04"
             ],
             "limite": "poids",
-            "etatAvencement": "attente",
-            "etatCargaison": "ouverte",
-            "distance": "55.57",
+            "limiteValue": 222,
+            "etatAvencement": "en cours",
+            "etatCargaison": "fermee",
+            "distance": 901.38,
             "tarif": 0,
             "produits": [],
             "id": 1,
