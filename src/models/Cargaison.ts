@@ -189,9 +189,14 @@ export class Routiere extends Cargaison {
 
 
 export abstract class Produit {
- 
+ protected tarif: number = 0;
+ set starif(value: number){this.tarif = value}
+ get gtarif(): number {return this.tarif}
   protected code: string=""
   protected id = 0;
+  protected etat: string ="en cours"
+  set setEtat(etat: string) {this.etat = etat}
+  get getEtat(): string {return this.etat}
   set ids(id: number) { this.id = id; }
   get idg(): number { return this.id; }
   get getCode(): string { return this.code; }

@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
-  $file = DATAS;
+  $file = DATA;
 
   if (file_put_contents($file, json_encode($decoded, JSON_PRETTY_PRINT))) {
     echo json_encode(['message' => 'Data saved successfully']);
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(['message' => 'Failed to save data']);
   }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
-  $file = DATAS;
+  $file = DATA;
 
   if (file_exists($file)) {
     $data = file_get_contents($file);

@@ -1,6 +1,257 @@
 {
     "cargo": [
         {
+            "libelle": "BBB",
+            "depart": [
+                "Throttled! See geocode.xyz\/pricing",
+                "2024-06-08"
+            ],
+            "arrive": [
+                "Throttled! See geocode.xyz\/pricing",
+                "2024-06-09"
+            ],
+            "limite": "poids",
+            "limiteValue": 222,
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": 49.63,
+            "tarif": 0,
+            "produits": [
+                [
+                    {
+                        "libelle": "Promotion 3",
+                        "poids": "22",
+                        "sender": {
+                            "nom": "lam",
+                            "prenom": "lam",
+                            "adresse": "",
+                            "mail": "dioprassoul0405@gmail.com",
+                            "telephone": ""
+                        },
+                        "receiver": {
+                            "nom": ",jsdjhsd",
+                            "prenom": "shsjd",
+                            "adresse": "",
+                            "mail": "dioprassoul0405@gmail.com",
+                            "telephone": ""
+                        },
+                        "tarif": 98267.40000000001,
+                        "code": "hCb7-C5",
+                        "id": 0,
+                        "etat": "en cours"
+                    }
+                ],
+                [
+                    {
+                        "libelle": "CC",
+                        "poids": "22",
+                        "sender": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "dioprassoul0405@gmail.com",
+                            "telephone": ""
+                        },
+                        "receiver": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "dioprassoul0405@gmail.com",
+                            "telephone": ""
+                        },
+                        "tarif": 98267.40000000001,
+                        "code": "uiVV-C5",
+                        "id": 0,
+                        "etat": "en cours"
+                    }
+                ]
+            ],
+            "id": 5,
+            "type": "Maritime"
+        },
+        {
+            "libelle": "AAA",
+            "depart": [
+                "Pikine",
+                "2024-06-07"
+            ],
+            "arrive": [
+                "Thies",
+                "2024-06-08"
+            ],
+            "limite": "poids",
+            "limiteValue": 222,
+            "etatAvencement": "arrive",
+            "etatCargaison": "fermee",
+            "distance": 51.84,
+            "tarif": 0,
+            "produits": [
+                [
+                    {
+                        "libelle": "new",
+                        "poids": "22",
+                        "sender": {
+                            "nom": "DDD",
+                            "prenom": "s",
+                            "adresse": "",
+                            "mail": "idrissaba@esp.sn",
+                            "telephone": ""
+                        },
+                        "receiver": {
+                            "nom": "qjqj",
+                            "prenom": "qkjd",
+                            "adresse": "djhs",
+                            "mail": "idrissaba@esp.sn",
+                            "telephone": ""
+                        },
+                        "tarif": 102643.2,
+                        "code": "xP1b-C4",
+                        "id": 0,
+                        "etat": "arrive"
+                    }
+                ],
+                [
+                    {
+                        "libelle": "new2",
+                        "poids": "22",
+                        "sender": {
+                            "nom": "DDD",
+                            "prenom": "s",
+                            "adresse": "",
+                            "mail": "dioprassoul0405@gmail.com",
+                            "telephone": ""
+                        },
+                        "receiver": {
+                            "nom": "ZZZ",
+                            "prenom": "qkjd",
+                            "adresse": "djhs",
+                            "mail": "dioprassoul0405@gmail.com",
+                            "telephone": ""
+                        },
+                        "tarif": 102643.2,
+                        "code": "yiYM-C4",
+                        "id": 0,
+                        "etat": "arrive"
+                    }
+                ],
+                [
+                    {
+                        "libelle": "new3",
+                        "poids": "22",
+                        "sender": {
+                            "nom": "DDD",
+                            "prenom": "s",
+                            "adresse": "",
+                            "mail": "boydioplegrand@gmail.com",
+                            "telephone": ""
+                        },
+                        "receiver": {
+                            "nom": "ZZZ",
+                            "prenom": "qkjd",
+                            "adresse": "djhs",
+                            "mail": "boydioplegrand@gmail.com",
+                            "telephone": ""
+                        },
+                        "tarif": 102643.2,
+                        "code": "nE6u-C4",
+                        "id": 0,
+                        "etat": "arrive"
+                    }
+                ]
+            ],
+            "id": 4,
+            "type": "Maritime"
+        },
+        {
+            "libelle": "test",
+            "depart": [
+                "Lakh Ndiatokh",
+                "2024-06-05"
+            ],
+            "arrive": [
+                "Thi\u00e8s Region",
+                "2024-06-06"
+            ],
+            "limite": "poids",
+            "limiteValue": 222,
+            "etatAvencement": "perdu",
+            "etatCargaison": "fermee",
+            "distance": 43.31,
+            "tarif": 0,
+            "produits": [],
+            "id": 3,
+            "type": "Maritime"
+        },
+        {
+            "libelle": "ZZZ",
+            "depart": [
+                "Throttled! See geocode.xyz\/pricing",
+                "2024-06-04"
+            ],
+            "arrive": [
+                "Thi\u00e8s",
+                "2024-06-06"
+            ],
+            "limite": "poids",
+            "limiteValue": 22,
+            "etatAvencement": "perdu",
+            "etatCargaison": "fermee",
+            "distance": 50.53,
+            "tarif": 0,
+            "produits": [
+                [
+                    {
+                        "libelle": "222",
+                        "poids": "22",
+                        "sender": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "dioprassoul0405@gmail.com",
+                            "telephone": ""
+                        },
+                        "receiver": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "dioprassoul0405@gmail.com",
+                            "telephone": ""
+                        },
+                        "tarif": 100049.40000000001,
+                        "code": "uUcE-C2",
+                        "id": 0,
+                        "etat": "perdu"
+                    }
+                ],
+                [
+                    {
+                        "libelle": "ahvagh",
+                        "poids": "11",
+                        "sender": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "dioprassoul0405@gmail.com",
+                            "mail": "",
+                            "telephone": ""
+                        },
+                        "receiver": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "dioprassoul0405@gmail.com",
+                            "telephone": ""
+                        },
+                        "tarif": 50024.700000000004,
+                        "code": "vWKU-C2",
+                        "id": 0,
+                        "etat": "perdu"
+                    }
+                ]
+            ],
+            "id": 2,
+            "type": "Maritime"
+        },
+        {
             "libelle": "Promotion 3",
             "depart": [
                 "Zyg",
@@ -12,7 +263,52 @@
             ],
             "limite": "poids",
             "limiteValue": 222,
-            "etatAvencement": "attente",
+            "etatAvencement": "arrive",
+            "etatCargaison": "fermee",
+            "distance": 901.38,
+            "tarif": 0,
+            "produits": [
+                [
+                    {
+                        "libelle": "",
+                        "poids": "",
+                        "sender": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "dioprassoul0405@gmail.com",
+                            "telephone": ""
+                        },
+                        "receiver": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "dioprassoul0405@gmail.com",
+                            "telephone": ""
+                        },
+                        "tarif": 0,
+                        "code": "Zv1r-C1",
+                        "id": 0,
+                        "etat": "archive"
+                    }
+                ]
+            ],
+            "id": 1,
+            "type": "Maritime"
+        },
+        {
+            "libelle": "Promotion 3",
+            "depart": [
+                "Zyg",
+                "2024-06-03"
+            ],
+            "arrive": [
+                "Gouraf",
+                "2024-06-04"
+            ],
+            "limite": "poids",
+            "limiteValue": 222,
+            "etatAvencement": "arrive",
             "etatCargaison": "fermee",
             "distance": 901.38,
             "tarif": 0,
@@ -32,28 +328,8 @@
             ],
             "limite": "poids",
             "limiteValue": 222,
-            "etatAvencement": "attente",
-            "etatCargaison": "ouverte",
-            "distance": 901.38,
-            "tarif": 0,
-            "produits": [],
-            "id": 1,
-            "type": "Maritime"
-        },
-        {
-            "libelle": "Promotion 3",
-            "depart": [
-                "Zyg",
-                "2024-06-03"
-            ],
-            "arrive": [
-                "Gouraf",
-                "2024-06-04"
-            ],
-            "limite": "poids",
-            "limiteValue": 222,
-            "etatAvencement": "attente",
-            "etatCargaison": "ouverte",
+            "etatAvencement": "en cours",
+            "etatCargaison": "fermee",
             "distance": 901.38,
             "tarif": 0,
             "produits": [],

@@ -1,7 +1,7 @@
 <?php
 include('../config.php');
-$jsonData = file_get_contents(DATAS);
-$jsonContent = file_get_contents(DATAS);
+$jsonData = file_get_contents(DATA);
+$jsonContent = file_get_contents(DATA);
 
 // Décoder le JSON en tableau PHP
 $dataPH = json_decode($jsonContent, true);
@@ -197,7 +197,31 @@ $dataPH = json_decode($jsonContent, true);
       </form>
     </div>
   </div>
-
+  <div class="text-center">
+          <h3 class="text-2xl font-bold mb-2">${details.libelle}</h3>
+          <p class="text-gray-600">${details.description}</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-gray-100 p-4 rounded-lg shadow-sm">
+            <h4 class="font-semibold text-lg mb-2">Informations de Transport</h4>
+            <p><strong>Lieu de départ:</strong> ${details.depart[0]}</p>
+            <p><strong>Lieu d'arrivée:</strong> ${details.arrive[0]}</p>
+            <p><strong>Type:</strong> ${details.type}</p>
+            <p><strong>Poids:</strong> ${details.poids}</p>
+            <p><strong>Volume:</strong> ${details.volume}</p>
+          </div>
+          <div class="bg-gray-100 p-4 rounded-lg shadow-sm">
+            <h4 class="font-semibold text-lg mb-2">Statut et Dates</h4>
+            <p><strong>État:</strong> ${details.etatCargaison === "ouverte" ? "Ouvert" : "Fermé"}</p>
+            <p><strong>État d'avancement:</strong> ${details.etatAvencement}</p>
+            <p><strong>Date d'expédition:</strong> ${details.dateExpedition}</p>
+            <p><strong>Date d'arrivée:</strong> ${details.dateArrivee}</p>
+          </div>
+        </div>
+        <div class="mt-4 text-right">
+          <button class="bg-green-500 text-white px-4 py-2 rounded-md shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Modifier</button>
+          <button class="bg-red-500 text-white px-4 py-2 rounded-md shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">Supprimer</button>
+        </div>
   <script>
     function nextStep(currentStepId, nextStepId) {
       document.getElementById(currentStepId).classList.add('hidden');

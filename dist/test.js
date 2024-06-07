@@ -9,10 +9,77 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Aerienne, Maritime, Routiere, Alimentaire, Chimique, Fragile, Incassable, client } from './models/Cargaison.js';
 var cargaisons = bd.cargo;
+function fetchGet(url) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = yield response.json();
+            return data;
+        }
+        catch (error) {
+            console.error('Error during fetch:', error);
+            throw error;
+        }
+    });
+}
+function sendMail(produit) {
+    fetch('./msimple.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(produit),
+    })
+        .then(response => response.json())
+        .then(jsonResponse => {
+        if (jsonResponse.success) {
+            console.log('E-mail envoyé pour le produit:', produit);
+        }
+        else {
+            console.error('Erreur lors de l\'envoi de l\'e-mail:', jsonResponse.message);
+        }
+    })
+        .catch(error => {
+        console.error('Il y a eu un problème avec l\'opération fetch:', error);
+    });
+}
+// // Utilisation de la fonction
+// fetchGet('http://example.com/api/data')
+//   .then(data => console.log(data))
+//   .catch(error => console.error('Fetch error:', error));
 function saveCargaison(bd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const response = yield fetch('./save.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bd),
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const result = yield response.json();
+            console.log(result);
+        }
+        catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    });
+}
+function fetchCarg(bd) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield fetch('./mail.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -127,31 +194,33 @@ function getFormData(form) {
     return formData;
 }
 let cargForm = document.getElementById("addCargForm");
-cargForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    let formData = getFormData(cargForm);
-    let errors = validateForm(formData);
-    clearErrors();
-    if (errors.length > 0) {
-        displayErrors(errors);
-    }
-    else {
-        console.log(formData);
-        let carga;
-        if (formData.type === 'Aerienne') {
-            carga = new Aerienne(parseFloat(formData.distance), formData.libelle, [formData.lieu_depart, formData.dateDep], [formData.lieu_arrivee, formData.dateAr], formData.limite, parseFloat(formData.limiteVal));
+if (cargForm) {
+    cargForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        let formData = getFormData(cargForm);
+        let errors = validateForm(formData);
+        clearErrors();
+        if (errors.length > 0) {
+            displayErrors(errors);
         }
-        else if (formData.type === 'Maritime') {
-            carga = new Maritime(parseFloat(formData.distance), formData.libelle, [formData.lieu_depart, formData.dateDep], [formData.lieu_arrivee, formData.dateAr], formData.limite, parseFloat(formData.limiteVal));
+        else {
+            console.log(formData);
+            let carga;
+            if (formData.type === 'Aerienne') {
+                carga = new Aerienne(parseFloat(formData.distance), formData.libelle, [formData.lieu_depart, formData.dateDep], [formData.lieu_arrivee, formData.dateAr], formData.limite, parseFloat(formData.limiteVal));
+            }
+            else if (formData.type === 'Maritime') {
+                carga = new Maritime(parseFloat(formData.distance), formData.libelle, [formData.lieu_depart, formData.dateDep], [formData.lieu_arrivee, formData.dateAr], formData.limite, parseFloat(formData.limiteVal));
+            }
+            else if (formData.type === 'Routiere') {
+                carga = new Routiere(parseFloat(formData.distance), formData.libelle, [formData.lieu_depart, formData.dateDep], [formData.lieu_arrivee, formData.dateAr], formData.limite, parseFloat(formData.limiteVal));
+            }
+            console.log(carga);
+            addTab(cargaisons, carga);
+            cargForm.reset();
         }
-        else if (formData.type === 'Routiere') {
-            carga = new Routiere(parseFloat(formData.distance), formData.libelle, [formData.lieu_depart, formData.dateDep], [formData.lieu_arrivee, formData.dateAr], formData.limite, parseFloat(formData.limiteVal));
-        }
-        console.log(carga);
-        addTab(cargaisons, carga);
-        cargForm.reset();
-    }
-});
+    });
+}
 function validateForm(data) {
     let errors = [];
     for (let key in data) {
@@ -205,8 +274,8 @@ function afficherTr(tab, table, tr, index) {
     if (!tbody)
         return;
     tbody.innerHTML = ''; // Clear existing rows
-    tab.forEach((item) => {
-        const row = tr(item, index);
+    tab.forEach((item, ind) => {
+        const row = tr(item, index + ind);
         tbody.insertAdjacentHTML('beforeend', row);
     });
 }
@@ -220,17 +289,17 @@ function returCarg(cargaison, id) {
    
     <td class="p-3 text-gray-700">
       <label class="inline-flex items-center">
-        <input type="checkbox" class="form-checkbox" ${cargaison.etatCargaison === "ouverte" ? "checked" : ""} >
-        <span class="ml-2">${cargaison.etatCargaison === "ouverte" ? "Ouvert" : "Fermé"}</span>
+        <input id="${id}" type="checkbox" class="form-checkbox etat ${cargaison.etatAvencement != "attente" ? "hidden" : ""}" ${cargaison.etatCargaison === "ouverte" ? "checked" : ""} >
+        <span class="ml-2 ">${cargaison.etatCargaison === "ouverte" ? "Ouvert" : "Fermé"}</span>
       </label>
     </td>
     <td class="p-3 text-gray-700 flex space-x-2">
-      <a href="details_cargaison.php?id=${cargaison.id}" class="text-blue-500 hover:underline">Détails</a>
-      <button id="${cargaison.id}" onclick="openModal('addProductModal')" class="text-green-500 hover:underline" name="${id}">Ajouter Produit</button>
+      <a id="${id}" href="#" class="text-blue-500 hover:underline details-btn">Détails</a>
+      <button id="${cargaison.id}" onclick="openModal('addProductModal')" class="${cargaison.etatCargaison === "fermee" ? "desactive" : ""} addp text-green-500 hover:underline" name="${id}">Ajouter Produit</button>
     </td>`;
     let part2 = `
     <td class="p-3 text-gray-700">
-    <select class="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+    <select id="${id}" class="avance p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
       <option value="attente" ${cargaison.etatAvencement === "attente" ? "selected" : ""}>En attente</option>
       <option value="perdu" ${cargaison.etatAvencement === "perdu" ? "selected" : ""}>Perdu</option>
       <option value="en cours" ${cargaison.etatAvencement === "en cours" ? "selected" : ""}>En cours</option>
@@ -240,11 +309,12 @@ function returCarg(cargaison, id) {
   </td>
   </tr>
     `;
+    console.log(id);
     let tr;
     if (cargaison.etatAvencement == "en cours") {
         part2 = `
     <td class="p-3 text-gray-700">
-    <select class="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+    <select id="${id}" class="avance p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
       <option value="perdu" ${cargaison.etatAvencement === "perdu" ? "selected" : ""}>Perdu</option>
       <option value="en cours" ${cargaison.etatAvencement === "en cours" ? "selected" : ""}>En cours</option>
       <option value="arrive" ${cargaison.etatAvencement === "arrive" ? "selected" : ""}>Arrivé</option>
@@ -257,7 +327,7 @@ function returCarg(cargaison, id) {
     else if (cargaison.etatAvencement == "arrive") {
         part2 = `
     <td class="p-3 text-gray-700">
-    <select class="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+    <select id="${id}" class="avance p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
       <option value="arrive" ${cargaison.etatAvencement === "arrive" ? "selected" : ""}>Arrivé</option>
     </select>
     <span> ${cargaison.etatAvencement}</span>
@@ -268,10 +338,21 @@ function returCarg(cargaison, id) {
     else if (cargaison.etatAvencement === "perdu") {
         part2 = `
     <td class="p-3 text-gray-700">
-    <select class="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+    <select id="${id}" class="avance p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
       <option value="perdu" ${cargaison.etatAvencement === "perdu" ? "selected" : ""}>Perdu</option>
       <option value="en cours" ${cargaison.etatAvencement === "en cours" ? "selected" : ""}>En cours</option>
       <option value="arrive" ${cargaison.etatAvencement === "arrive" ? "selected" : ""}>Arrivé</option>
+    </select>
+    <span> ${cargaison.etatAvencement}</span>
+  </td>
+  </tr>
+    `;
+    }
+    if (cargaison.etatCargaison == "ouverte") {
+        part2 = `
+    <td class="p-3 text-gray-700">
+    <select id="${id}" class="avance p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+    <option value="attente" ${cargaison.etatAvencement === "attente" ? "selected" : ""}>En attente</option>
     </select>
     <span> ${cargaison.etatAvencement}</span>
   </td>
@@ -298,6 +379,7 @@ function paginateDefault(tab, npage, nel, table, tr) {
     links.forEach(link => {
         link.addEventListener('click', (event) => changePage(event, tab, nel, table, tr));
     });
+    cargAct();
 }
 function paginate(tab, npage, nel, table, tr) {
     const nombrePage = Math.ceil(tab.length / nel);
@@ -312,6 +394,9 @@ function paginate(tab, npage, nel, table, tr) {
     links.forEach(link => {
         link.addEventListener('click', (event) => changePage(event, tab, nel, table, tr));
     });
+    cargAct();
+    listenAdd();
+    details();
 }
 function generatePaginationLinks(nombrePage, currentPage) {
     let links = `<a href="#" id="${currentPage - 1}" class="page-link prev bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"><i class="fas fa-angle-left"></i></a>`;
@@ -342,14 +427,17 @@ formFilter.addEventListener("submit", function (event) {
     console.log(filteredData);
     paginate(filteredData, 1, 2, table, returCarg);
 });
-const addP = document.querySelectorAll('.addp');
-addP.forEach(element => {
-    element.addEventListener('click', (event) => {
-        let ele = event.target;
-        idCarg = ele.id;
-        alert(idCarg);
+function listenAdd() {
+    const addP = document.querySelectorAll('.addp');
+    addP.forEach(element => {
+        element.addEventListener('click', (event) => {
+            let ele = event.target;
+            idCarg = ele.id;
+            alert(idCarg);
+        });
     });
-});
+}
+listenAdd();
 function displayReceipt(prod) {
     const receipt = document.createElement('div');
     receipt.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 shadow-lg rounded-lg z-50 max-w-sm w-full';
@@ -394,6 +482,7 @@ addProduct === null || addProduct === void 0 ? void 0 : addProduct.addEventListe
     const index = bd.cargo.findIndex((car) => car.id == idCarg);
     // const cargoData = bd.cargo.find((c: any) => c.id == idCarg) as Cargaison;
     const cargoData = findD(bd.cargo, "id", idCarg);
+    console.log(cargoData);
     const inst = makeInstance(cargoData);
     console.log(inst);
     console.log(cargoData);
@@ -418,7 +507,11 @@ addProduct === null || addProduct === void 0 ? void 0 : addProduct.addEventListe
     console.log(prod);
     const newId = generateUniqueCode(4) + "-C" + cargoData.id;
     prod.setCode = newId;
+    prod.starif = inst.calculerFrais(prod);
+    prod.setEtat = "en cours";
     inst.ajouterProduit(prod);
+    console.log(prod);
+    fetchCarg(prod);
     if (inst.getObjet.produits.length == 0) {
         return;
     }
@@ -528,20 +621,219 @@ console.log(produit1.info());
 // } else {
 //   console.error('Element with id "type_produit" not found.');
 // }
-const open = document.querySelectorAll(".etat");
-const avance = document.querySelectorAll(".avance");
-open.forEach(input => {
-    input.addEventListener("change", () => {
-        const idCargo = parseInt(input.id);
-        // concole.log(bd.cargo[idCargo].etatCargaison)
-        if (bd.cargo[idCargo].etatCargaison == "fermee") {
-            bd.cargo[idCargo].etatCargaison = "ouverte";
+function cargAct() {
+    const open = document.querySelectorAll(".etat");
+    const avance = document.querySelectorAll(".avance");
+    open.forEach(input => {
+        input.addEventListener("change", () => {
+            const idCargo = parseInt(input.id);
+            alert(idCargo);
+            // concole.log(bd.cargo[idCargo].etatCargaison)
+            if (bd.cargo[idCargo].etatCargaison == "fermee") {
+                bd.cargo[idCargo].etatCargaison = "ouverte";
+            }
+            else {
+                bd.cargo[idCargo].etatCargaison = "fermee";
+            }
+            console.log(bd.cargo[idCargo]);
+            saveCargaison(bd);
+            paginate(bd.cargo, 1, 2, table, returCarg);
+        });
+    });
+    avance.forEach(sele => {
+        sele.addEventListener("change", () => {
+            const idCargo = parseInt(sele.id);
+            bd.cargo[idCargo].etatAvencement = sele.value;
+            paginate(bd.cargo, 1, 2, table, returCarg);
+            bd.cargo[idCargo].produits.forEach((sousListe, sousListeIndex) => {
+                sousListe.forEach((produit, produitIndex) => {
+                    produit.etat = sele.value;
+                    bd.cargo[idCargo].produits;
+                    console.log(produit.code, produitIndex);
+                    //  sendMail(produit) // Envoyer les données au serveur pour l'envoi des e-mails via POST
+                });
+            });
+            saveCargaison(bd);
+            console.log(bd);
+            const produits = bd.cargo[idCargo].produits;
+            produits.forEach((produit) => {
+                sendMail(produit[0]);
+                console.log(produit[0]);
+            });
+        });
+    });
+}
+cargAct();
+details();
+function details() {
+    const cargoList = document.querySelector('.cargoList');
+    const cargoDetails = document.getElementById('cargoDetails');
+    const detailsContent = document.getElementById('detailsContent');
+    const backToList = document.getElementById('backToList');
+    const detailsButtons = document.querySelectorAll('.details-btn');
+    detailsButtons.forEach(button => {
+        button.addEventListener('click', (event) => __awaiter(this, void 0, void 0, function* () {
+            const id = event.currentTarget.getAttribute('id');
+            idC = parseInt(id);
+            if (id) {
+                // Fetch details from server or local data
+                displayDetails(bd.cargo[id]);
+                cargoList.classList.add('hidden');
+                cargoDetails.classList.remove('hidden');
+            }
+        }));
+    });
+    backToList.addEventListener('click', () => {
+        cargoDetails.classList.add('hidden');
+        cargoList.classList.remove('hidden');
+    });
+}
+var idC = 0;
+function displayDetails(details) {
+    const detailsContent = document.getElementById('detailsContent');
+    let part1 = `
+    <div class="text-center">
+        <h3 class="text-2xl font-bold mb-2">${details.libelle}</h3>
+        <p class="text-gray-600">${details.description}</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-gray-100 p-4 rounded-lg shadow-sm">
+            <h4 class="font-semibold text-lg mb-2">Informations de Transport</h4>
+            <p><strong>Lieu de départ:</strong> ${details.depart[0]}</p>
+            <p><strong>Lieu d'arrivée:</strong> ${details.arrive[0]}</p>
+            <p><strong>Type:</strong> ${details.type}</p>
+            <p><strong>Poids:</strong> ${details.poids} kg</p>
+            <p><strong>Volume:</strong> ${details.volume} m³</p>
+        </div>
+        <div class="bg-gray-100 p-4 rounded-lg shadow-sm">
+            <h4 class="font-semibold text-lg mb-2">Statut et Dates</h4>
+            <p><strong>État:</strong> ${details.etatCargaison === "ouverte" ? "Ouvert" : "Fermé"}</p>
+            <p><strong>État d'avancement:</strong> ${details.etatAvencement}</p>
+            <p><strong>Date d'expédition:</strong> ${details.dateExpedition}</p>
+            <p><strong>Date d'arrivée:</strong> ${details.dateArrivee}</p>
+        </div>
+    </div>
+    <div class="mt-4">
+        <h4 class="font-semibold text-lg mb-2">Produits</h4>
+        <div class="bg-gray-100 p-4 rounded-lg shadow-sm">
+            <table class="w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border border-gray-300 px-4 py-2">Nom</th>
+                        <th class="border border-gray-300 px-4 py-2">Poids</th>
+                        <th class="border border-gray-300 px-4 py-2">Quantité</th>
+                        <th class="border border-gray-300 px-4 py-2">Type</th>
+                        <th class="border border-gray-300 px-4 py-2">Etat</th>
+                        <th class="border border-gray-300 px-4 py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+    // Génère les lignes du tableau pour chaque produit
+    let produitsHTML = '';
+    details.produits.forEach((lot, lotIndex) => {
+        lot.forEach((produit, produitIndex) => {
+            const isDisabled = details.etatAvencement !== 'arrive' ? 'disabled' : '';
+            produitsHTML += `
+            <tr>
+                <td class="border border-gray-300 px-4 py-2">${produit.libelle}</td>
+                <td class="border border-gray-300 px-4 py-2">${produit.poids} kg</td>
+                <td class="border border-gray-300 px-4 py-2">${produit.quantite}</td>
+                <td class="border border-gray-300 px-4 py-2">${produit.type}</td>
+                <td class="border border-gray-300 px-4 py-2">${produit.type}</td>
+                <td class="border border-gray-300 px-4 py-2">
+                    <select id="${lotIndex}" ${isDisabled} class="etatProd bg-yellow-500 text-white px-2 py-1 rounded-md shadow hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">
+                        <option value="attente" disabled  ${produit.etat === 'attente' ? 'selected' : ''}>En attente</option>
+                        <option value="arrive" ${produit.etat === 'arrive' ? 'selected' : ''}>Arrivé</option>
+                        <option value="recupere" ${produit.etat === 'recupere' ? 'selected' : ''}>Récupèré</option>
+                        <option value="archive" ${produit.etat === 'archive' ? 'selected' : ''}>Archivé</option>
+                        <option value="perdu" ${produit.etat === 'perdu' ? 'selected' : ''}>Perdu</option>
+                    </select>
+                    <button id="${lotIndex}" class="deleProd bg-red-500 text-white px-2 py-1 rounded-md shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">Supprimer</button>
+                </td>
+            </tr>`;
+        });
+    });
+    // Fin du HTML
+    const part2 = `
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="mt-4 text-right">
+        <button class="bg-green-500 text-white px-4 py-2 rounded-md shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Modifier</button>
+        <button class="bg-red-500 text-white px-4 py-2 rounded-md shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">Supprimer</button>
+    </div>`;
+    // Ajoute le HTML complet à l'élément detailsContent
+    detailsContent.innerHTML = part1 + produitsHTML + part2;
+    console.log(idC);
+    const delet = document.querySelectorAll(".deleProd");
+    delet.forEach((button) => {
+        button.addEventListener("click", () => {
+            const id = (button.id);
+            bd.cargo[idC].produits.splice(parseInt(id), 1);
+            displayDetails(bd.cargo[idC]);
+            console.log(bd.cargo[idC].produits);
+        });
+    });
+    const modif = document.querySelectorAll(".etatProd");
+    modif.forEach((select) => {
+        select.addEventListener("change", () => {
+            const id = (select.id);
+            console.log(bd.cargo[idC].produits[id][0].etat);
+            bd.cargo[idC].produits[id][0].etat = select.value;
+            displayDetails(bd.cargo[idC]);
+            console.log(bd.cargo[idC].produits[id][0].etat);
+            sendMail(bd.cargo[idC].produits[id][0]);
+            saveCargaison(bd);
+        });
+    });
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const searchForm = document.getElementById('searchForm');
+    if (searchForm) {
+        searchForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            searchProductByCode();
+        });
+    }
+});
+function searchProductByCode() {
+    const formData = new FormData(document.getElementById('searchForm'));
+    const params = new URLSearchParams(formData).toString();
+    fetch(`searchProduct.php?${params}`)
+        .then(response => response.json())
+        .then(data => displaySearchResults(data))
+        .catch(error => console.error('Error searching product:', error));
+}
+function displaySearchResults(data) {
+    const resultContainer = document.getElementById('resultContainer');
+    if (resultContainer) {
+        resultContainer.innerHTML = '';
+        if (data.product && data.cargo) {
+            const product = data.product;
+            const cargo = data.cargo;
+            const resultItem = document.createElement('div');
+            resultItem.className = 'border p-4 mb-4 bg-white rounded';
+            resultItem.innerHTML = `
+        <h2 class="text-xl font-bold mb-2">Produit: ${product.libelle}</h2>
+        <p><strong>Code:</strong> ${product.code}</p>
+        <p><strong>Poids:</strong> ${product.poids} kg</p>
+        <p><strong>Tarif:</strong> ${product.tarif} €</p>
+        <p><strong>Etat:</strong> ${product.etat}</p>
+        <h3 class="text-lg font-bold mt-4">Cargaison</h3>
+        <p><strong>Libellé:</strong> ${cargo.libelle}</p>
+        <p><strong>Type:</strong> ${cargo.type}</p>
+        <p><strong>Etat de cargaison:</strong> ${cargo.etatCargaison}</p>
+        <p><strong>Etat d'avancement:</strong> ${cargo.etatAvencement}</p>
+        <p><strong>Distance:</strong> ${cargo.distance} km</p>
+      `;
+            resultContainer.appendChild(resultItem);
         }
         else {
-            bd.cargo[idCargo].etatCargaison = "fermee";
+            resultContainer.innerHTML = '<p>Aucun produit trouvé avec ce code.</p>';
         }
-        console.log(bd.cargo[idCargo]);
-        saveCargaison(bd);
-        paginate(bd.cargo, 1, 2, table, returCarg);
-    });
-});
+    }
+}
+// Expose functions globally (if needed)
+window.searchProductByCode = searchProductByCode;
+window.displaySearchResults = displaySearchResults;

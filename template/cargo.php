@@ -1,7 +1,7 @@
 <?php
 include('../config.php');
-$jsonData = file_get_contents(DATAS);
-$jsonContent = file_get_contents(DATAS);
+$jsonData = file_get_contents(DATA);
+$jsonContent = file_get_contents(DATA);
 
 // Décoder le JSON en tableau PHP
 $dataPH = json_decode($jsonContent, true);
@@ -11,7 +11,11 @@ $dataPH = json_decode($jsonContent, true);
 <script>
   var bd = <?php print_r($jsonData);
 
-            ?>
+
+
+?>
+
+          
 </script>
 <?php ?>
 
@@ -31,7 +35,7 @@ $dataPH = json_decode($jsonContent, true);
 
 <body class="bg-gray-100">
 
-  <div class="container mx-auto p-6">
+  <div class="container mx-auto p-6 cargoList">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-4xl font-bold text-gray-800">Gestion de Cargaisons</h1>
       <button onclick="openModal('addCargaisonModal')" class="bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Ajouter Cargaison</button>
@@ -55,58 +59,56 @@ $dataPH = json_decode($jsonContent, true);
       </div>
 
       <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow overflow-hidden">
-    <thead class="bg-gray-50">
-      <tr>
-        <th class="p-3 text-left text-gray-600 font-semibold">Libelle</th>
-        <th class="p-3 text-left text-gray-600 font-semibold">Lieu de départ</th>
-        <th class="p-3 text-left text-gray-600 font-semibold">Lieu d'arrivée</th>
-        <th class="p-3 text-left text-gray-600 font-semibold">Type</th>
-        <th class="p-3 text-left text-gray-600 font-semibold">État</th>
-        <th class="p-3 text-left text-gray-600 font-semibold">Actions</th>
-        <th class="p-3 text-left text-gray-600 font-semibold">État d'avancement</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php 
-      foreach ($dataPH["cargo"] as $key => $value) {
-      ?>
-      <tr class="border-b">
-        <td class="p-3 text-gray-700"><?=$value["libelle"]?></td>
-        <td class="p-3 text-gray-700"><?=$value["depart"][0]?></td>
-        <td class="p-3 text-gray-700"><?=$value["arrive"][0]?></td>
-        <td class="p-3 text-gray-700"><?=$value["type"]?></td>
-        
-        <td class="p-3 text-gray-700">
-          <label class="inline-flex items-center">
-            <input   id="<?=$key?>" type="checkbox" class="form-checkbox etat <?=$value["etatAvencement"] != "attente" ? "desactive" : ""?>" <?=$value["etatCargaison"] == "ouverte" ? "checked" : ""?> >
-            <span class="ml-2"><?=$value["etatCargaison"] == "ouverte" ? "Ouvert" : "Fermé"?></span>
-          </label>
-        </td>
-        <td class="p-3 text-gray-700 flex space-x-2">
-          <a href="details_cargaison.php?id=<?=$value['id']?>" class="text-blue-500 hover:underline">Détails</a>
-          <button onclick="openModal('addProductModal')" class="text-green-500 addp hover:underline" id="<?=$value["id"]?>">Ajouter Produit</button>
-        </td>
-        <td class="p-3 text-gray-700">
-          <select  id=" <?= $key?>" class="avance p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="updateStateAvancement(<?=$value['id']?>, this.value)">
-          <?php if($value["etatCargaison"] == "ouverte"){ if($value["etatAvencement"]=="attente")  ?> <option value="attente" <?=$value["etatAvencement"] == "en attente" ? "selected" : ""?>>En attente</option> <?php    ?>
-            <?php if($value["etatAvencement"]=="en cours"){  ?> <option value="perdu" <?=$value["etatAvencement"] == "perdu" ? "selected" : ""?>>Perdu</option> <?php }?>
-            <?php if($value["etatAvencement"]=="attente"|| $value["etatAvencement"]=="perdu"){ ?> <option value="en cours" <?=$value["etatAvencement"] == "en cours" ? "selected" : ""?>>En cours</option><?php }  ?> 
-            <?php if($value["etatAvencement"]=="en cours" || $value["etatAvencement"]=="perdu" ){ ?> <option value="arrive" <?=$value["etatAvencement"] == "arrive" ? "selected" : ""?>>Arrivé</option><?php }?> 
-            <?php }?>
-          </select>
-          <span> <?=$value["etatAvencement"]?></span>
-        </td>
-      </tr>
-      <?php 
-      if($key==1)
-      {
-        break;
-      }
-      } ?>
-    </tbody>
-  </table>
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="p-3 text-left text-gray-600 font-semibold">Libelle</th>
+            <th class="p-3 text-left text-gray-600 font-semibold">Lieu de départ</th>
+            <th class="p-3 text-left text-gray-600 font-semibold">Lieu d'arrivée</th>
+            <th class="p-3 text-left text-gray-600 font-semibold">Type</th>
+            <th class="p-3 text-left text-gray-600 font-semibold">État</th>
+            <th class="p-3 text-left text-gray-600 font-semibold">Actions</th>
+            <th class="p-3 text-left text-gray-600 font-semibold">État d'avancement</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          foreach ($dataPH["cargo"] as $key => $value) {
+          ?>
+            <tr class="border-b ">
+              <td class="p-3 text-gray-700"><?= $value["libelle"] ?></td>
+              <td class="p-3 text-gray-700"><?= $value["depart"][0] ?></td>
+              <td class="p-3 text-gray-700"><?= $value["arrive"][0] ?></td>
+              <td class="p-3 text-gray-700"><?= $value["type"] ?></td>
+
+              <td class="p-3 text-gray-700 ">
+                  <input id="<?= $key ?>" type="checkbox" class="form-checkbox etat <?php if($value["etatAvencement"] != "attente") echo 'hidden'?>" <?= $value["etatCargaison"] == "ouverte" ? "checked" : "" ?>>
+                  <span class="ml-2"><?= $value["etatCargaison"] == "ouverte" ? "Ouvert" : "Fermé" ?></span>
+              </td>
+              <td class="p-3 text-gray-700 flex space-x-2">
+                <a href="#" id="<?= $key?>" class="text-blue-500 hover:underline details-btn  ">Détails</a>
+                <button onclick="openModal('addProductModal')" class="<?= $value["etatCargaison"] == "fermee" ? "desactive" : "" ?> text-green-500 addp hover:underline" id="<?= $value["id"] ?>">Ajouter Produit</button>
+              </td>
+              <td class="p-3 text-gray-700">
+                <select id=" <?= $key ?>" class="avance p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <?php if ($value["etatAvencement"] == "attente") { ?> <option value="attente" <?= $value["etatAvencement"] == "en attente" ? "selected" : "" ?>>En attente</option> <?php }
+                                                                                                                                                                                  if ($value["etatCargaison"] == "fermee") {  ?>
+                    <?php if ($value["etatAvencement"] == "en cours") {  ?> <option value="perdu" <?= $value["etatAvencement"] == "perdu" ? "selected" : "" ?>>Perdu</option> <?php } ?>
+                    <?php if ($value["etatAvencement"] == "attente" || $value["etatAvencement"] == "perdu") { ?> <option value="en cours" <?= $value["etatAvencement"] == "en cours" ? "selected" : "" ?>>En cours</option><?php }  ?>
+                    <?php if ($value["etatAvencement"] == "arrive" || $value["etatAvencement"] == "en cours" || $value["etatAvencement"] == "arrive" ) { ?> <option value="arrive" <?= $value["etatAvencement"] == "arrive" ? "selected" : "" ?>>Arrivé</option><?php } ?>
+                  <?php } ?>
+                </select>
+                <span> <?= $value["etatAvencement"] ?></span>
+              </td>
+            </tr>
+          <?php
+            if ($key ==3) {
+              break;
+            }
+          } ?>
+        </tbody>
+      </table>
       <div class="pagination flex justify-center items-center space-x-2 mt-4">
-        <a href="#" class="page-link prev bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+        <a  href="#" class="  page-link prev bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
           <i class="fas fa-angle-left"></i>
         </a>
         <a href="#" class="page-link next bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
@@ -317,7 +319,12 @@ $dataPH = json_decode($jsonContent, true);
       </div>
     </div>
   </div>
-
+  <div id="cargoDetails" class="hidden bg-white p-6 rounded-lg shadow-md">
+  <button id="backToList" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-4">Retour à la liste</button>
+  <div id="detailsContent" class="space-y-4">
+    <!-- Contenu des détails de la cargaison sera injecté ici -->
+  </div>
+</div>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
     var map = L.map('map').setView([14.736370473758933, -17.45315551757813], 10);
@@ -466,5 +473,10 @@ $dataPH = json_decode($jsonContent, true);
 <style>
   #map {
     height: 300px;
+  }
+  .desactive{
+    opacity: .5;
+    cursor: not-allowed;
+    pointer-events: none;
   }
 </style>

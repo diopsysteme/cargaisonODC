@@ -167,6 +167,10 @@ export class Routiere extends Cargaison {
 }
 //
 export class Produit {
+    set starif(value) { this.tarif = value; }
+    get gtarif() { return this.tarif; }
+    set setEtat(etat) { this.etat = etat; }
+    get getEtat() { return this.etat; }
     set ids(id) { this.id = id; }
     get idg() { return this.id; }
     get getCode() { return this.code; }
@@ -176,8 +180,10 @@ export class Produit {
         this.poids = poids;
         this.sender = sender;
         this.receiver = receiver;
+        this.tarif = 0;
         this.code = "";
         this.id = 0;
+        this.etat = "en cours";
     }
     getLibelle() {
         return this.libelle;
