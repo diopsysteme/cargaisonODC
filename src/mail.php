@@ -12,7 +12,7 @@ function sendEmail($recipientEmail, $recipientName, $subject, $body, $pdfContent
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'diopmail.test@gmail.com';
-        $mail->Password = 'anfg kvwo qjof tled'; // Remplacez par le mot de passe correct
+        $mail->Password = 'anfg kvwo qjof tled'; 
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 
@@ -98,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <br>
             <h2 style="color: #007BFF;">Suivi de votre colis</h2>
             <p>Vous pouvez suivre votre colis en utilisant le code du produit sur notre plateforme à l\'adresse suivante :</p>
-            <p><a href="http://www.mouhamadou.moustapha.diop:8082/prog1/src/index.php?page=suivi" style="color: #007BFF;">Suivi de colis</a></p>
+            <p><a href="http://www.mouhamadou.moustapha.diop:8082/prog1/src/suivi.html.php" style="color: #007BFF;">Suivi de colis</a></p>
             ';
         
             $pdf->writeHTML($html, true, false, true, false, '');

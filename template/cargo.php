@@ -10,12 +10,7 @@ $dataPH = json_decode($jsonContent, true);
 <script type="module" src="../dist/test.js"></script>
 <script>
   var bd = <?php print_r($jsonData);
-
-
-
-?>
-
-          
+            ?>
 </script>
 <?php ?>
 
@@ -25,12 +20,11 @@ $dataPH = json_decode($jsonContent, true);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestion de Cargaisons</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.1/dist/tailwind.min.css" rel="stylesheet">
+  <title>Gestion de Cargaisons</title>                                                                                                                                                                                                                                                                                                                                                   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.1/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../src/output.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
   <script src="https://kit.fontawesome.com/d2ba3c872c.js" crossorigin="anonymous"></script>
-
 </head>
 
 <body class="bg-gray-100">
@@ -43,11 +37,11 @@ $dataPH = json_decode($jsonContent, true);
 
     <div class="bg-white p-7 rounded-lg shadow-md">
       <div class="mb-2 flex space-x-4">
-        <form action="" id="filterForm">
-          <input type="text" placeholder="Lieu de départ" class="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" name="l_depart">
-          <input type="text" placeholder="Lieu d'arrivée" class="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" name="l_arrivee">
-          <input type="date" placeholder="Date de départ" class="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" name="d_depart">
-          <input type="date" placeholder="Date d'arrivée" class="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" name="d_arrivee">
+        <form id="filterForm" method="get" action="?page=cargo">
+          <input  type="text" placeholder="Lieu de départ" class="filteInp flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" name="l_depart">
+          <input type="text" placeholder="Lieu d'arrivée" class="filteInp flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" name="l_arrivee">
+          <input type="date" placeholder="Date de départ" class="filteInp flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" name="d_depart">
+          <input type="date" placeholder="Date d'arrivée" class="filteInp flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" name="d_arrivee">
           <select name="type" class="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
             <option value="">Type</option>
             <option value="Maritime">Maritime</option>
@@ -81,34 +75,34 @@ $dataPH = json_decode($jsonContent, true);
               <td class="p-3 text-gray-700"><?= $value["type"] ?></td>
 
               <td class="p-3 text-gray-700 ">
-                  <input id="<?= $key ?>" type="checkbox" class="form-checkbox etat <?php if($value["etatAvencement"] != "attente") echo 'hidden'?>" <?= $value["etatCargaison"] == "ouverte" ? "checked" : "" ?>>
-                  <span class="ml-2"><?= $value["etatCargaison"] == "ouverte" ? "Ouvert" : "Fermé" ?></span>
+                <input id="<?= $key ?>" type="checkbox" class="form-checkbox etat <?php if ($value["etatAvencement"] != "attente") echo 'hidden' ?>" <?= $value["etatCargaison"] == "ouverte" ? "checked" : "" ?>>
+                <span class="ml-2"><?= $value["etatCargaison"] == "ouverte" ? "Ouvert" : "Fermé" ?></span>
               </td>
               <td class="p-3 text-gray-700 flex space-x-2">
-                <a href="#" id="<?= $key?>" class="text-blue-500 hover:underline details-btn  ">Détails</a>
                 <button onclick="openModal('addProductModal')" class="<?= $value["etatCargaison"] == "fermee" ? "desactive" : "" ?> text-green-500 addp hover:underline" id="<?= $value["id"] ?>">Ajouter Produit</button>
+                <a href="#" id="<?= $key ?>" class="text-blue-500 hover:underline details-btn  ">Détails</a>
               </td>
               <td class="p-3 text-gray-700">
                 <select id=" <?= $key ?>" class="avance p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                   <?php if ($value["etatAvencement"] == "attente") { ?> <option value="attente" <?= $value["etatAvencement"] == "en attente" ? "selected" : "" ?>>En attente</option> <?php }
-                                                                                                                                                                                  if ($value["etatCargaison"] == "fermee") {  ?>
-                    <?php if ($value["etatAvencement"] == "en cours") {  ?> <option value="perdu" <?= $value["etatAvencement"] == "perdu" ? "selected" : "" ?>>Perdu</option> <?php } ?>
-                    <?php if ($value["etatAvencement"] == "attente" || $value["etatAvencement"] == "perdu") { ?> <option value="en cours" <?= $value["etatAvencement"] == "en cours" ? "selected" : "" ?>>En cours</option><?php }  ?>
-                    <?php if ($value["etatAvencement"] == "arrive" || $value["etatAvencement"] == "en cours" || $value["etatAvencement"] == "arrive" ) { ?> <option value="arrive" <?= $value["etatAvencement"] == "arrive" ? "selected" : "" ?>>Arrivé</option><?php } ?>
+                                                                                                                                                                                    if ($value["etatCargaison"] == "fermee") {  ?>
+                    <?php if ($value["etatAvencement"] == "en cours" || $value["etatAvencement"] == "perdu") {  ?> <option value="perdu" <?= $value["etatAvencement"] == "perdu" ? "selected" : "" ?>>Perdu</option> <?php } ?>
+                    <?php if ($value["etatAvencement"] == "attente" || $value["etatAvencement"] == "en cours" || $value["etatAvencement"] == "perdu") { ?> <option value="en cours" <?= $value["etatAvencement"] == "en cours" ? "selected" : "" ?>>En cours</option><?php }  ?>
+                    <?php if ($value["etatAvencement"] == "arrive" || $value["etatAvencement"] == "en cours" || $value["etatAvencement"] == "arrive") { ?> <option value="arrive" <?= $value["etatAvencement"] == "arrive" ? "selected" : "" ?>>Arrivé</option><?php } ?>
                   <?php } ?>
                 </select>
                 <span> <?= $value["etatAvencement"] ?></span>
               </td>
             </tr>
           <?php
-            if ($key ==3) {
+            if ($key == 3) {
               break;
             }
           } ?>
         </tbody>
       </table>
       <div class="pagination flex justify-center items-center space-x-2 mt-4">
-        <a  href="#" class="  page-link prev bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+        <a href="#" class="  page-link prev bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
           <i class="fas fa-angle-left"></i>
         </a>
         <a href="#" class="page-link next bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
@@ -121,8 +115,7 @@ $dataPH = json_decode($jsonContent, true);
 
 
 
-  <div id="addProductModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center hidden  ">
-    <button>ferme</button>
+  <div id="addProductModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center hidden">
     <div class="bg-white rounded-lg shadow-lg p-6 w-1/2">
       <h2 class="text-2xl font-bold mb-4">Ajouter Produit</h2>
       <form id="productForm">
@@ -213,30 +206,14 @@ $dataPH = json_decode($jsonContent, true);
           </div>
         </div>
       </form>
+      <div class="flex justify-end space-x-4">
+        <button type="button" onclick="closeModal('addProductModal')" class="bg-gray-500 text-white px-4 py-2 rounded-md shadow hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Cancel</button>
+      </div>
     </div>
   </div>
 
-  <script>
-    function nextStep(currentStepId, nextStepId) {
-      document.getElementById(currentStepId).classList.add('hidden');
-      document.getElementById(nextStepId).classList.remove('hidden');
-    }
 
-    function previousStep(currentStepId, previousStepId) {
-      document.getElementById(currentStepId).classList.add('hidden');
-      document.getElementById(previousStepId).classList.remove('hidden');
-    }
-  </script>
-
-  <script>
-    function openModal(modalId) {
-      document.getElementById(modalId).classList.remove('hidden');
-    }
-
-    function closeModal(modalId) {
-      etElementById(modalId).classList.add('hidden');
-    }
-  </script>
+  
   <!-- Modal Ajouter Cargaison -->
   <div id="addCargaisonModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center hidden">
     <div class="bg-white rounded-lg shadow-lg p-6 w-1/2">
@@ -308,7 +285,7 @@ $dataPH = json_decode($jsonContent, true);
       </form>
     </div>
   </div>
-
+  <div id="notificationContainer"></div>
   <!-- Map Modal -->
   <div id="mapModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center hidden">
     <div class="bg-white rounded-lg shadow-lg p-6 w-2/3">
@@ -319,12 +296,243 @@ $dataPH = json_decode($jsonContent, true);
       </div>
     </div>
   </div>
-  <div id="cargoDetails" class="hidden bg-white p-6 rounded-lg shadow-md">
-  <button id="backToList" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-4">Retour à la liste</button>
-  <div id="detailsContent" class="space-y-4">
-    <!-- Contenu des détails de la cargaison sera injecté ici -->
+  <div id="editDatesModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-1/2">
+      <h2 class="text-2xl font-bold mb-2">Modifier les Dates</h2>
+      <form id="editDatesForm">
+      <div class="mb-2">
+          <label for="dateDep2" class="block text-gray-700">Date de depart</label>
+          <input type="date" id="dateDep2" name="dateDep2" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <div id="error-dateDep2" class="error"></div>
+        </div>
+        <div class="mb-2">
+          <label for="dateAr2" class="block text-gray-700">Date d'arrivée</label>
+          <input type="date" id="dateAr2" name="dateAr2" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <div id="error-dateAr2" class="error"></div>
+        </div>
+        <div class="flex justify-end space-x-4">
+          <button type="button" id="closeModEdit" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Annuler</button>
+          <button type="submit" class="btnSu bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Modifier</button>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
+  <div id="cargoDetails" class="hidden bg-white p-6 rounded-lg shadow-md">
+    <button id="backToList" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-4">Retour à la liste</button>
+    <div id="detailsContent" class="space-y-4">
+      <!-- Contenu des détails de la cargaison sera injecté ici -->
+    </div>
+  </div>
+  <style>
+  /* Custom scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .error {
+    width: auto;
+    height: 10px;
+    margin-bottom: 10px;
+    color: red;
+    font-size: 1rem;
+
+  }
+</style>
+<style>
+  #map {
+    height: 300px;
+  }
+
+  .desactive {
+    opacity: .5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* styles.css */
+  #notificationContainer {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 300px;
+    z-index: 1000;
+  }
+
+  .notification {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index:9999;
+    z-index:99999;
+  }
+
+  .notification.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .notification.classic {
+    background-color: #f8f9fa;
+    color: #212529;
+    z-index:99999;
+    border-left: 4px solid #007bff;
+  }
+
+  .notification.modern {
+    background-color: #333;
+    color: #fff;
+    border-left: 4px solid #17a2b8;
+    z-index:99999;
+  }
+
+  .notification .close {
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 20px;
+  }
+
+  @keyframes fadeOutUp {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    100% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+  }
+
+  .notification.fade-out {
+    animation: fadeOutUp 1s forwards;
+  }
+
+  #notificationContainer {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 300px;
+    z-index: 1000;
+    z-index:99999;
+  }
+
+  .notification,
+  .error-message {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index:99999;
+  }
+
+  .notification.show,
+  .error-message.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .notification.classic {
+    background-color: #f8f9fa;
+    color: #212529;
+    border-left: 4px solid #007bff;
+  }
+
+  .notification.modern {
+    background-color: #333;
+    color: #fff;
+    border-left: 4px solid #17a2b8;
+  }
+
+  .error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #f5c6cb;
+  }
+
+  .notification .close,
+  .error-message .close {
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 20px;
+  }
+
+  @keyframes fadeOutUp {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    100% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+  }
+
+  .notification.fade-out,
+  .error-message.fade-out {
+    animation: fadeOutUp 1s forwards;
+  }
+  #editDatesModal{
+    z-index: 9999;
+  }
+</style>
+
+ 
+  <script>
+
+
+
+
+
+
+
+
+
+    function nextStep(currentStepId, nextStepId) {
+      document.getElementById(currentStepId).classList.add('hidden');
+      document.getElementById(nextStepId).classList.remove('hidden');
+    }
+
+    function previousStep(currentStepId, previousStepId) {
+      document.getElementById(currentStepId).classList.add('hidden');
+      document.getElementById(previousStepId).classList.remove('hidden');
+    }
+  </script>
+
+  <script>
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.remove('hidden');
+    }
+
+    function closeModal(modalId) {
+      etElementById(modalId).classList.add('hidden');
+    }
+  </script>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
     var map = L.map('map').setView([14.736370473758933, -17.45315551757813], 10);
@@ -416,7 +624,6 @@ $dataPH = json_decode($jsonContent, true);
       sele = event.target
       let input = sele.parentNode.querySelector("input")
       input.id = sele.value
-      input.name = sele.value
       if (sele.value == "poids") {
         console.log()
 
@@ -443,40 +650,3 @@ $dataPH = json_decode($jsonContent, true);
     document.getElementById(modalId).classList.add('hidden');
   }
 </script>
-<style>
-  /* Custom scrollbar styling */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-
-  .error {
-    width: auto;
-    height: 10px;
-    margin-bottom: 10px;
-    color: red;
-    font-size: 1rem;
-
-  }
-</style>
-<style>
-  #map {
-    height: 300px;
-  }
-  .desactive{
-    opacity: .5;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-</style>

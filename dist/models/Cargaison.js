@@ -1,3 +1,4 @@
+import { showError } from '../funct.js';
 const config = {
     pra: 100,
     prm: 200,
@@ -56,13 +57,16 @@ export class Cargaison {
             const poidsNouveauProduit = produit.getPoids();
             console.log(poidsTotal);
             if (poidsTotal + poidsNouveauProduit > this.limiteValue) {
-                alert("Impossible d'ajouter le produit. La cargaison atteindra sa limite de poids.");
+                showError("Impossible d'ajouter le produit. La cargaison atteindra sa limite de poids.");
                 return;
             }
         }
-        else if (this.produits.length >= this.limiteValue) {
-            alert("La cargaison est pleine. Impossible d'ajouter plus de produits.");
-            return;
+        else {
+            console.log(this.produits + "=" + this.limiteValue);
+            if (this.produits.length >= this.limiteValue) {
+                showError("La cargaison est pleine. Impossible d'ajouter plus de produits.");
+                return;
+            }
         }
         const coutProduit = this.calculerFrais(produit);
         this.produits.push(produit);
@@ -96,7 +100,7 @@ export class Aerienne extends Cargaison {
     }
     ajouterProduit(produit) {
         if (produit instanceof Chimique) {
-            console.log("Les produits chimiques ne peuvent pas être transportés par voie aérienne.");
+            showError("Les produits chimiques ne peuvent pas être transportés par voie aérienne.");
             return;
         }
         super.ajouterProduit(produit);
@@ -127,7 +131,7 @@ export class Maritime extends Cargaison {
     }
     ajouterProduit(produit) {
         if (produit instanceof Fragile) {
-            console.log("Les produits fragiles ne peuvent pas être transportés par voie maritime.");
+            showError("Les produits fragiles ne peuvent pas être transportés par voie maritime.");
             return;
         }
         super.ajouterProduit(produit);
@@ -156,7 +160,7 @@ export class Routiere extends Cargaison {
     }
     ajouterProduit(produit) {
         if (produit instanceof Chimique) {
-            console.log("Les produits chimiques ne peuvent pas être transportés par voie terrestre.");
+            showError("Les produits chimiques ne peuvent pas être transportés par voie terrestre.");
             return;
         }
         super.ajouterProduit(produit);
@@ -183,7 +187,7 @@ export class Produit {
         this.tarif = 0;
         this.code = "";
         this.id = 0;
-        this.etat = "en cours";
+        this.etat = "attente";
     }
     getLibelle() {
         return this.libelle;

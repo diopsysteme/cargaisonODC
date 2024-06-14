@@ -33,11 +33,10 @@ function sendEmail($recipientEmail, $recipientName, $subject, $body, $pdfContent
     }
 }
 function generateMessage( $data) {
-    $etat=$data['etat'];
-    $sender = $data['sender'];
+    $etat=$data['etat'];    $sender = $data['sender'];
     $receiver = $data['receiver'];
     $codeProduit = $data['code'];
-    $lienSuivi = "http://www.mouhamadou.moustapha.diop:8082/prog1/src/index.php?page=suivi&code=$codeProduit";
+    $lienSuivi = "http://www.mouhamadou.moustapha.diop:8082/prog1/src/suivi.html.php";
 
     $headerStyle = "background-color: #4CAF50; color: white; padding: 10px; text-align: center;";
     $sectionStyle = "border: 1px solid #ddd; padding: 10px; margin: 10px 0;";

@@ -1,6 +1,228 @@
 {
     "cargo": [
         {
+            "libelle": "dd",
+            "depart": [
+                "Throttled! See geocode.xyz\/pricing",
+                "2024-06-15"
+            ],
+            "arrive": [
+                "Thi\u00e8s",
+                "2024-06-16"
+            ],
+            "limite": "poids",
+            "limiteValue": 333,
+            "etatAvencement": "attente",
+            "etatCargaison": "fermee",
+            "distance": 51.88,
+            "tarif": 0,
+            "produits": [],
+            "id": 10,
+            "type": "Maritime"
+        },
+        {
+            "libelle": "ghh",
+            "depart": [
+                "Dakar",
+                "2024-06-14"
+            ],
+            "arrive": [
+                "Throttled! See geocode.xyz\/pricing",
+                "2024-06-15"
+            ],
+            "limite": "poids",
+            "limiteValue": 33,
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": 81.51,
+            "tarif": 0,
+            "produits": [],
+            "id": 9,
+            "type": "Maritime"
+        },
+        {
+            "libelle": "Promotion 3",
+            "depart": [
+                "Pikine",
+                "2024-06-22"
+            ],
+            "arrive": [
+                "Thi\u00e8s",
+                "2024-06-12"
+            ],
+            "limite": "poids",
+            "limiteValue": 33,
+            "etatAvencement": "en cours",
+            "etatCargaison": "fermee",
+            "distance": 51.25,
+            "tarif": 0,
+            "produits": [],
+            "id": 8,
+            "type": "Maritime"
+        },
+        {
+            "libelle": " Promotion 4",
+            "depart": [
+                "Pikine",
+                "2024-06-10"
+            ],
+            "arrive": [
+                "Thi\u00e8s",
+                "2024-06-15"
+            ],
+            "limite": "nbprod",
+            "limiteValue": 2,
+            "etatAvencement": "en cours",
+            "etatCargaison": "fermee",
+            "distance": 51.4,
+            "tarif": 0,
+            "produits": [
+                [
+                    {
+                        "libelle": "",
+                        "poids": "",
+                        "sender": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "",
+                            "telephone": ""
+                        },
+                        "receiver": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "",
+                            "telephone": ""
+                        },
+                        "tarif": 0,
+                        "code": "rUs2-C7",
+                        "id": 0,
+                        "etat": "en cours"
+                    }
+                ],
+                [
+                    {
+                        "libelle": "",
+                        "poids": "",
+                        "sender": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "",
+                            "telephone": ""
+                        },
+                        "receiver": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "",
+                            "telephone": ""
+                        },
+                        "tarif": 0,
+                        "code": "HjYM-C7",
+                        "id": 0,
+                        "etat": "en cours"
+                    }
+                ],
+                [
+                    {
+                        "libelle": "",
+                        "poids": "",
+                        "sender": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "",
+                            "telephone": ""
+                        },
+                        "receiver": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "",
+                            "telephone": ""
+                        },
+                        "tarif": 0,
+                        "code": "rShH-C7",
+                        "id": 0,
+                        "etat": "en cours"
+                    }
+                ],
+                [
+                    {
+                        "libelle": "",
+                        "poids": "",
+                        "sender": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "",
+                            "telephone": ""
+                        },
+                        "receiver": {
+                            "nom": "",
+                            "prenom": "",
+                            "adresse": "",
+                            "mail": "",
+                            "telephone": ""
+                        },
+                        "tarif": 0,
+                        "code": "Fj53-C7",
+                        "id": 0,
+                        "etat": "en cours"
+                    }
+                ]
+            ],
+            "id": 7,
+            "type": "Aerienne"
+        },
+        {
+            "libelle": "sidy",
+            "depart": [
+                "Pikine",
+                "2024-06-08"
+            ],
+            "arrive": [
+                "Thies",
+                "2024-06-09"
+            ],
+            "limite": "poids",
+            "limiteValue": 22,
+            "etatAvencement": "arrive",
+            "etatCargaison": "fermee",
+            "distance": 53.38,
+            "tarif": 0,
+            "produits": [
+                [
+                    {
+                        "libelle": "sdb",
+                        "poids": "2",
+                        "sender": {
+                            "nom": "sdb",
+                            "prenom": "sdb",
+                            "adresse": "",
+                            "mail": "chachadiop632@gmail.com",
+                            "telephone": ""
+                        },
+                        "receiver": {
+                            "nom": "diop",
+                            "prenom": "ss",
+                            "adresse": "",
+                            "mail": "dioprassoul0405@gmail.com",
+                            "telephone": ""
+                        },
+                        "tarif": 9608.4,
+                        "code": "pSLO-C6",
+                        "id": 0,
+                        "etat": "arrive"
+                    }
+                ]
+            ],
+            "id": 6,
+            "type": "Maritime"
+        },
+        {
             "libelle": "BBB",
             "depart": [
                 "Throttled! See geocode.xyz\/pricing",
@@ -12,8 +234,8 @@
             ],
             "limite": "poids",
             "limiteValue": 222,
-            "etatAvencement": "attente",
-            "etatCargaison": "ouverte",
+            "etatAvencement": "arrive",
+            "etatCargaison": "fermee",
             "distance": 49.63,
             "tarif": 0,
             "produits": [
@@ -38,7 +260,7 @@
                         "tarif": 98267.40000000001,
                         "code": "hCb7-C5",
                         "id": 0,
-                        "etat": "en cours"
+                        "etat": "arrive"
                     }
                 ],
                 [
@@ -62,7 +284,31 @@
                         "tarif": 98267.40000000001,
                         "code": "uiVV-C5",
                         "id": 0,
-                        "etat": "en cours"
+                        "etat": "arrive"
+                    }
+                ],
+                [
+                    {
+                        "libelle": "fff",
+                        "poids": "22",
+                        "sender": {
+                            "nom": " mbaye",
+                            "prenom": "seriggne ",
+                            "adresse": "france",
+                            "mail": "serignembayet@gmail.com",
+                            "telephone": ""
+                        },
+                        "receiver": {
+                            "nom": "send",
+                            "prenom": "send",
+                            "adresse": "DD",
+                            "mail": "dioprassoul0405@gmail.com",
+                            "telephone": ""
+                        },
+                        "tarif": 98267.40000000001,
+                        "code": "E8Db-C5",
+                        "id": 0,
+                        "etat": "recupere"
                     }
                 ]
             ],
@@ -259,11 +505,11 @@
             ],
             "arrive": [
                 "Gouraf",
-                "2024-06-04"
+                "2024-06-14"
             ],
             "limite": "poids",
             "limiteValue": 222,
-            "etatAvencement": "arrive",
+            "etatAvencement": "en cours",
             "etatCargaison": "fermee",
             "distance": 901.38,
             "tarif": 0,
@@ -271,7 +517,7 @@
                 [
                     {
                         "libelle": "",
-                        "poids": "",
+                        "poids": 22,
                         "sender": {
                             "nom": "",
                             "prenom": "",
@@ -286,10 +532,10 @@
                             "mail": "dioprassoul0405@gmail.com",
                             "telephone": ""
                         },
-                        "tarif": 0,
+                        "tarif": 1500,
                         "code": "Zv1r-C1",
                         "id": 0,
-                        "etat": "archive"
+                        "etat": "en cours"
                     }
                 ]
             ],
@@ -328,7 +574,7 @@
             ],
             "limite": "poids",
             "limiteValue": 222,
-            "etatAvencement": "en cours",
+            "etatAvencement": "perdu",
             "etatCargaison": "fermee",
             "distance": 901.38,
             "tarif": 0,
@@ -348,7 +594,7 @@
             ],
             "limite": "poids",
             "limiteValue": 222,
-            "etatAvencement": "en cours",
+            "etatAvencement": "perdu",
             "etatCargaison": "fermee",
             "distance": 901.38,
             "tarif": 0,
@@ -357,5 +603,27 @@
             "type": "Maritime"
         }
     ],
-    "users": []
+    "users": [
+        {
+            "id": 1,
+            "nom": "Diop",
+            "prenom": "Rassoul",
+            "mail": "dioprassoul0405@gmail.com",
+            "password": "123"
+        },
+        {
+            "id": 2,
+            "nom": "Diop",
+            "prenom": "Rassoul",
+            "mail": "dioprassoul0405@gmail.com",
+            "password": "123"
+        },
+        {
+            "id": 3,
+            "nom": "Diop",
+            "prenom": "Rassoul",
+            "mail": "dioprassoul0405@gmail.com",
+            "password": "123"
+        }
+    ]
 }

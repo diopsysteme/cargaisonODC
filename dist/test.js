@@ -8,28 +8,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Aerienne, Maritime, Routiere, Alimentaire, Chimique, Fragile, Incassable, client } from './models/Cargaison.js';
-var cargaisons = bd.cargo;
-function fetchGet(url) {
+import { showNotification, showError, } from './funct.js';
+// src/index.ts
+function sendSMS(to, text) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const response = yield fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = yield response.json();
-            return data;
+        const response = yield fetch('./message.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                to: to,
+                text: text
+            })
+        });
+        const data = yield response.json();
+        if (data.status === 'success') {
+            console.log(data.message);
         }
-        catch (error) {
-            console.error('Error during fetch:', error);
-            throw error;
+        else {
+            console.error(data.message);
         }
     });
 }
+var cargaisons = bd.cargo;
+var npage = 1;
+var eleBypage = 4;
 function sendMail(produit) {
     fetch('./msimple.php', {
         method: 'POST',
@@ -103,7 +107,9 @@ function addTab(carg, cargaison) {
     carg.unshift(cargaison.getObjet);
     console.log(bd);
     saveCargaison(bd);
-    paginate(cargaisons, 1, 2, table, returCarg);
+    paginate(cargaisons, npage, 4, table, returCarg);
+    showNotification('cargaison ajoutée avec succes.', 'classic');
+    showNotification('cargaison ajoutée avec succes.', 'modern');
 }
 const aerienne = new Aerienne(1000, "air1", ["dakar", "2024/02/02"], ["dakar", "2024/02/02"], "poids", 22.9);
 console.log(aerienne);
@@ -124,12 +130,12 @@ aerienne.ajouterProduit(produit4);
 console.log(aerienne);
 maritime.ajouterProduit(produit1);
 maritime.ajouterProduit(produit2);
-maritime.ajouterProduit(produit3); // Doit afficher un message d'erreurs
+// maritime.ajouterProduit(produit3); // Doit afficher un message d'erreurs
 maritime.ajouterProduit(produit4);
-routiere.ajouterProduit(produit1);
-routiere.ajouterProduit(produit2);
-routiere.ajouterProduit(produit3);
-routiere.ajouterProduit(produit4);
+// routiere.ajouterProduit(produit1);
+// routiere.ajouterProduit(produit2);
+// routiere.ajouterProduit(produit3);
+// routiere.ajouterProduit(produit4);
 console.log(`Total Aerienne: ${aerienne.sommeTotale()}F, Nombre de produits: ${aerienne.nbProduit()}`);
 console.log(`Total Maritime: ${maritime.sommeTotale()}F, Nombre de produits: ${maritime.nbProduit()}`);
 console.log(`Total Routiere: ${routiere.sommeTotale()}F, Nombre de produits: ${routiere.nbProduit()}`);
@@ -202,6 +208,7 @@ if (cargForm) {
         clearErrors();
         if (errors.length > 0) {
             displayErrors(errors);
+            showError("verifier les champs");
         }
         else {
             console.log(formData);
@@ -231,33 +238,37 @@ function validateForm(data) {
     if (data.distance <= 0) {
         errors.push({ field: "distance", message: "La distance doit être supérieure à 0." });
     }
-    const departureDate = new Date(data.dateDep);
-    const arrivalDate = new Date(data.dateAr);
+    const departureDate = data.dateDep ? new Date(data.dateDep) : new Date(data.dateDep2);
+    const arrivalDate = data.dateAr ? new Date(data.dateAr) : new Date(data.dateAr2);
     const currentDate = new Date();
+    console.log(departureDate, arrivalDate);
     const normalizeDate = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
     const normalizedDepartureDate = normalizeDate(departureDate);
     const normalizedArrivalDate = normalizeDate(arrivalDate);
     const normalizedCurrentDate = normalizeDate(currentDate);
-    console.log('Departure Date:', normalizedDepartureDate);
-    console.log('Arrival Date:', normalizedArrivalDate);
-    console.log('Current Date:', normalizedCurrentDate);
+    // console.log('Departure Date:', normalizedDepartureDate);
+    // console.log('Arrival Date:', normalizedArrivalDate);
+    // console.log('Current Date:', normalizedCurrentDate);
+    let fielddep = data.dateDep ? "dateDep" : "dateDep2";
+    let fieldAr = data.dateAr ? "dateAr" : "dateAr2";
     if (isNaN(departureDate.getTime())) {
-        errors.push({ field: "dateDep", message: "La date de départ n'est pas valide." });
+        errors.push({ field: fielddep, message: "La date de départ n'est pas valide." });
     }
     else if (normalizedDepartureDate <= normalizedCurrentDate) {
-        errors.push({ field: "dateDep", message: "La date de départ doit être supérieure à la date d'aujourd'hui." });
+        errors.push({ field: fielddep, message: "La date de départ doit être supérieure à la date d'aujourd'hui." });
     }
     if (isNaN(arrivalDate.getTime())) {
-        errors.push({ field: "dateAr", message: "La date d'arrivée n'est pas valide." });
+        errors.push({ field: fieldAr, message: "La date d'arrivée n'est pas valide." });
     }
     else if (normalizedArrivalDate <= normalizedDepartureDate) {
-        errors.push({ field: "dateAr", message: "La date d'arrivée doit être supérieure à la date de départ." });
+        errors.push({ field: fieldAr, message: "La date d'arrivée doit être supérieure à la date de départ." });
     }
     return errors;
 }
 function displayErrors(errors) {
     errors.forEach(error => {
         const errorElement = document.getElementById(`error-${error.field}`);
+        console.log(errorElement);
         if (errorElement) {
             errorElement.textContent = error.message;
         }
@@ -280,6 +291,7 @@ function afficherTr(tab, table, tr, index) {
     });
 }
 function returCarg(cargaison, id) {
+    // ${cargaison.etatAvencement != "attente" ? "hidden" : ""}
     let part1 = `
   <tr class="border-b">
     <td class="p-3 text-gray-700">${cargaison.libelle}</td>
@@ -288,10 +300,10 @@ function returCarg(cargaison, id) {
     <td class="p-3 text-gray-700">${cargaison.type}</td>
    
     <td class="p-3 text-gray-700">
-      <label class="inline-flex items-center">
-        <input id="${id}" type="checkbox" class="form-checkbox etat ${cargaison.etatAvencement != "attente" ? "hidden" : ""}" ${cargaison.etatCargaison === "ouverte" ? "checked" : ""} >
+     
+        <input id="${id}" type="checkbox" class="form-checkbox etat " ${cargaison.etatCargaison === "ouverte" ? "checked" : ""} >
         <span class="ml-2 ">${cargaison.etatCargaison === "ouverte" ? "Ouvert" : "Fermé"}</span>
-      </label>
+      
     </td>
     <td class="p-3 text-gray-700 flex space-x-2">
       <a id="${id}" href="#" class="text-blue-500 hover:underline details-btn">Détails</a>
@@ -342,6 +354,18 @@ function returCarg(cargaison, id) {
       <option value="perdu" ${cargaison.etatAvencement === "perdu" ? "selected" : ""}>Perdu</option>
       <option value="en cours" ${cargaison.etatAvencement === "en cours" ? "selected" : ""}>En cours</option>
       <option value="arrive" ${cargaison.etatAvencement === "arrive" ? "selected" : ""}>Arrivé</option>
+    </select>
+    <span> ${cargaison.etatAvencement}</span>
+  </td>
+  </tr>
+    `;
+    }
+    if (cargaison.etatAvencement == "attente") {
+        part2 = `
+    <td class="p-3 text-gray-700">
+    <select id="${id}" class="avance p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" >
+    <option value="attente" ${cargaison.etatAvencement === "attente" ? "selected" : ""}>En attente</option>
+    <option value="en cours" ${cargaison.etatAvencement === "en cours" ? "selected" : ""}>En Cours</option>
     </select>
     <span> ${cargaison.etatAvencement}</span>
   </td>
@@ -409,31 +433,39 @@ function generatePaginationLinks(nombrePage, currentPage) {
 function changePage(event, tab, nel, table, tr) {
     event.preventDefault();
     const target = event.target;
-    const npage = parseInt(target.id);
+    npage = parseInt(target.id);
     if (npage < 1 || npage > Math.ceil(tab.length / nel))
         return;
     paginate(tab, npage, nel, table, tr);
 }
+const filteInp = document.querySelectorAll(".filteInp");
+// filteInp.forEach((el) =>{
+//   el.addEventListener("input",(e)=>formFilter.submit)
+// })
 let formFilter = document.getElementById("filterForm");
-formFilter.addEventListener("submit", function (event) {
-    event.preventDefault(); // Empêcher le rechargement de la page
-    let data = getFormData(formFilter);
-    console.log(data);
-    let filteredData = filterLD(cargaisons, data.l_depart, "depart");
-    filteredData = filterLD(filteredData, data.d_depart, "depart");
-    filteredData = filterLD(filteredData, data.l_arrivee, "arrive");
-    filteredData = filterLD(filteredData, data.d_arrivee, "arrive");
-    filteredData = filterData(filteredData, data.type, "type");
-    console.log(filteredData);
-    paginate(filteredData, 1, 2, table, returCarg);
-});
+if (formFilter) {
+    formFilter.addEventListener("submit", function (event) {
+        event.preventDefault(); // Empêcher le rechargement de la page
+        let data = getFormData(formFilter);
+        console.log(data);
+        let filteredData = filterLD(cargaisons, data.l_depart, "depart");
+        filteredData = filterLD(filteredData, data.d_depart, "depart");
+        filteredData = filterLD(filteredData, data.l_arrivee, "arrive");
+        filteredData = filterLD(filteredData, data.d_arrivee, "arrive");
+        filteredData = filterData(filteredData, data.type, "type");
+        console.log(filteredData);
+        paginate(filteredData, npage, 4, table, returCarg);
+    });
+}
 function listenAdd() {
     const addP = document.querySelectorAll('.addp');
     addP.forEach(element => {
         element.addEventListener('click', (event) => {
             let ele = event.target;
             idCarg = ele.id;
-            alert(idCarg);
+            //     const index = bd.cargo.findIndex((car: any) => car.id == idCarg);
+            // // const cargoData = bd.cargo.find((c: any) => c.id == idCarg) as Cargaison;
+            // const cargoData = findD(bd.cargo,"id",idCarg);
         });
     });
 }
@@ -475,6 +507,12 @@ function displayReceipt(prod) {
         }
     }, 5000);
 }
+function openModal(modalId) {
+    document.getElementById(modalId).classList.remove('hidden');
+}
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+}
 const addProduct = document.querySelector("#productForm");
 addProduct === null || addProduct === void 0 ? void 0 : addProduct.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -511,16 +549,34 @@ addProduct === null || addProduct === void 0 ? void 0 : addProduct.addEventListe
     prod.setEtat = "en cours";
     inst.ajouterProduit(prod);
     console.log(prod);
-    fetchCarg(prod);
+    if (cargoData.limite == "poids") {
+        const poidsTotal = cargoData.produits.reduce((total, produit) => total + produit.poids, 0);
+        const poidsNouveauProduit = data.poids;
+        console.log(poidsTotal, poidsNouveauProduit);
+        if (poidsTotal + poidsNouveauProduit > cargoData.limiteValue) {
+            showError("Impossible d'ajouter le produit. La cargaison atteindra sa limite de poids.");
+            return;
+        }
+    }
+    else {
+        console.log(cargoData.produits.length + "=" + cargoData.limiteValue);
+        if (cargoData.produits.length >= cargoData.limiteValue) {
+            showError("La cargaison est pleine. Impossible d'ajouter plus de produits.");
+            return;
+        }
+    }
     if (inst.getObjet.produits.length == 0) {
         return;
     }
+    closeModal("addProductModal");
+    fetchCarg(prod);
     console.log(cargoData.id);
     console.log(inst.getObjet.produits.length);
     bd.cargo[index].produits.push(inst.getObjet.produits);
     console.log(bd.cargo[index].produits);
     saveCargaison(bd);
     displayReceipt(prod);
+    showNotification("Le produit a été ajouté à la cargaison.", "classic");
 });
 console.log(bd.cargo[1].produits);
 function generateUniqueCode(length) {
@@ -583,7 +639,9 @@ function makeInstance(tab) {
     }
     return instance;
 }
-paginateDefault(cargaisons, 1, 2, table, returCarg);
+if (cargForm) {
+    paginateDefault(cargaisons, 1, 4, table, returCarg);
+}
 // const divCargaison = document.getElementById("contCarg");
 // if (divCargaison && divCargaison instanceof HTMLDivElement) {
 //   afficherCargaisonMaritime(aerienne, divCargaison);
@@ -627,8 +685,13 @@ function cargAct() {
     open.forEach(input => {
         input.addEventListener("change", () => {
             const idCargo = parseInt(input.id);
-            alert(idCargo);
+            // alert(idCargo)
             // concole.log(bd.cargo[idCargo].etatCargaison)
+            if (bd.cargo[idCargo].etatAvencement != "attente") {
+                showError("impossible d'ouvrir la cargaison elle est à :" + bd.cargo[idCargo].etatAvencement);
+                paginate(bd.cargo, npage, 4, table, returCarg);
+                return 2;
+            }
             if (bd.cargo[idCargo].etatCargaison == "fermee") {
                 bd.cargo[idCargo].etatCargaison = "ouverte";
             }
@@ -637,23 +700,31 @@ function cargAct() {
             }
             console.log(bd.cargo[idCargo]);
             saveCargaison(bd);
-            paginate(bd.cargo, 1, 2, table, returCarg);
+            paginate(bd.cargo, npage, 4, table, returCarg);
+            showNotification("Mise à jour etat cargaison reussi", "modern");
         });
     });
     avance.forEach(sele => {
         sele.addEventListener("change", () => {
             const idCargo = parseInt(sele.id);
+            console.log(bd.cargo[idCargo].produits.length);
+            if (bd.cargo[idCargo].produits.length == 0) {
+                showError("la cargaison est vide on ne peut le mettre à : " + sele.value);
+                paginate(bd.cargo, npage, 4, table, returCarg);
+                return 2;
+            }
             bd.cargo[idCargo].etatAvencement = sele.value;
-            paginate(bd.cargo, 1, 2, table, returCarg);
+            paginate(bd.cargo, npage, 4, table, returCarg);
             bd.cargo[idCargo].produits.forEach((sousListe, sousListeIndex) => {
                 sousListe.forEach((produit, produitIndex) => {
                     produit.etat = sele.value;
                     bd.cargo[idCargo].produits;
                     console.log(produit.code, produitIndex);
-                    //  sendMail(produit) // Envoyer les données au serveur pour l'envoi des e-mails via POST
                 });
             });
             saveCargaison(bd);
+            showNotification("Mise à jour etat cargaison reussi", "modern");
+            showNotification("envoie Mail au client reussi", "classic");
             console.log(bd);
             const produits = bd.cargo[idCargo].produits;
             produits.forEach((produit) => {
@@ -663,8 +734,10 @@ function cargAct() {
         });
     });
 }
-cargAct();
-details();
+if (cargForm) {
+    cargAct();
+    details();
+}
 function details() {
     const cargoList = document.querySelector('.cargoList');
     const cargoDetails = document.getElementById('cargoDetails');
@@ -677,7 +750,7 @@ function details() {
             idC = parseInt(id);
             if (id) {
                 // Fetch details from server or local data
-                displayDetails(bd.cargo[id]);
+                displayDetails(bd.cargo[id], idC);
                 cargoList.classList.add('hidden');
                 cargoDetails.classList.remove('hidden');
             }
@@ -689,7 +762,7 @@ function details() {
     });
 }
 var idC = 0;
-function displayDetails(details) {
+function displayDetails(details, id) {
     const detailsContent = document.getElementById('detailsContent');
     let part1 = `
     <div class="text-center">
@@ -702,15 +775,14 @@ function displayDetails(details) {
             <p><strong>Lieu de départ:</strong> ${details.depart[0]}</p>
             <p><strong>Lieu d'arrivée:</strong> ${details.arrive[0]}</p>
             <p><strong>Type:</strong> ${details.type}</p>
-            <p><strong>Poids:</strong> ${details.poids} kg</p>
-            <p><strong>Volume:</strong> ${details.volume} m³</p>
+            <p><strong>Poids:</strong> ${details.limiteValue} kg</p>
         </div>
         <div class="bg-gray-100 p-4 rounded-lg shadow-sm">
             <h4 class="font-semibold text-lg mb-2">Statut et Dates</h4>
             <p><strong>État:</strong> ${details.etatCargaison === "ouverte" ? "Ouvert" : "Fermé"}</p>
             <p><strong>État d'avancement:</strong> ${details.etatAvencement}</p>
-            <p><strong>Date d'expédition:</strong> ${details.dateExpedition}</p>
-            <p><strong>Date d'arrivée:</strong> ${details.dateArrivee}</p>
+            <p><strong>Date d'expédition:</strong> ${details.depart[1]}</p>
+            <p><strong>Date d'arrivée:</strong> ${details.arrive[1]}</p>
         </div>
     </div>
     <div class="mt-4">
@@ -743,6 +815,7 @@ function displayDetails(details) {
                 <td class="border border-gray-300 px-4 py-2">
                     <select id="${lotIndex}" ${isDisabled} class="etatProd bg-yellow-500 text-white px-2 py-1 rounded-md shadow hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">
                         <option value="attente" disabled  ${produit.etat === 'attente' ? 'selected' : ''}>En attente</option>
+                        <option value="en cours" disabled ${produit.etat === 'en cours' ? 'selected' : ''}>En cours</option>
                         <option value="arrive" ${produit.etat === 'arrive' ? 'selected' : ''}>Arrivé</option>
                         <option value="recupere" ${produit.etat === 'recupere' ? 'selected' : ''}>Récupèré</option>
                         <option value="archive" ${produit.etat === 'archive' ? 'selected' : ''}>Archivé</option>
@@ -760,7 +833,7 @@ function displayDetails(details) {
         </div>
     </div>
     <div class="mt-4 text-right">
-        <button class="bg-green-500 text-white px-4 py-2 rounded-md shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Modifier</button>
+        <button id="${id}" class="modifDC bg-green-500 text-white px-4 py-2 rounded-md shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Modifier</button>
         <button class="bg-red-500 text-white px-4 py-2 rounded-md shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">Supprimer</button>
     </div>`;
     // Ajoute le HTML complet à l'élément detailsContent
@@ -771,8 +844,10 @@ function displayDetails(details) {
         button.addEventListener("click", () => {
             const id = (button.id);
             bd.cargo[idC].produits.splice(parseInt(id), 1);
-            displayDetails(bd.cargo[idC]);
+            displayDetails(bd.cargo[idC], idC);
             console.log(bd.cargo[idC].produits);
+            saveCargaison(bd);
+            showNotification('suppression produit reussi.', 'classic');
         });
     });
     const modif = document.querySelectorAll(".etatProd");
@@ -781,30 +856,57 @@ function displayDetails(details) {
             const id = (select.id);
             console.log(bd.cargo[idC].produits[id][0].etat);
             bd.cargo[idC].produits[id][0].etat = select.value;
-            displayDetails(bd.cargo[idC]);
+            displayDetails(bd.cargo[idC], idC);
             console.log(bd.cargo[idC].produits[id][0].etat);
             sendMail(bd.cargo[idC].produits[id][0]);
             saveCargaison(bd);
+            showNotification('mise a jour etat produit reussi.', 'classic');
+            if (select.value == "recupere") {
+                bd.cargo[idC].produits.splice(parseInt(id), 1);
+                saveCargaison(bd);
+            }
+        });
+    });
+    const modifDC = document.querySelectorAll(".modifDC");
+    modifDC.forEach((button) => {
+        button.addEventListener("click", (e) => {
+            idC = parseInt(button.id);
+            console.log(idC);
+            alert(idC);
+            console.log(document.getElementById("editDatesModal"));
+            const butto = editDatesForm.querySelector("button");
+            console.log(butto);
+            document.getElementById("editDatesModal").classList.remove('hidden');
+            ouvreMod("editDatesModal");
+            const dep = document.getElementById("dateDep2");
+            const ar = document.getElementById("dateAr2");
+            ar.classList.remove('desactive');
+            dep.classList.remove('desactive');
+            dep.value = bd.cargo[idC].depart[1];
+            ar.value = bd.cargo[idC].arrive[1];
+            if (bd.cargo[idC].etatAvencement == "arrive" || bd.cargo[idC].etatAvencement == "perdu") {
+                dep.value = bd.cargo[idC].depart[1];
+                ar.value = bd.cargo[idC].arrive[1];
+                ar.classList.add('desactive');
+                dep.classList.add('desactive');
+                showError("impossible de faire une modification cargaison est à l'etat " + bd.cargo[idC].etatAvencement);
+            }
+            else if (bd.cargo[idC].etatAvencement == "en cours") {
+                dep.classList.add('desactive');
+            }
         });
     });
 }
-document.addEventListener('DOMContentLoaded', () => {
-    const searchForm = document.getElementById('searchForm');
-    if (searchForm) {
-        searchForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-            searchProductByCode();
-        });
-    }
-});
-function searchProductByCode() {
-    const formData = new FormData(document.getElementById('searchForm'));
-    const params = new URLSearchParams(formData).toString();
-    fetch(`searchProduct.php?${params}`)
-        .then(response => response.json())
-        .then(data => displaySearchResults(data))
-        .catch(error => console.error('Error searching product:', error));
-}
+// function searchProductByCode() {
+//   const formData = new FormData(document.getElementById('searchForm') as HTMLFormElement);
+//   const params = new URLSearchParams(formData as any).toString();
+//   const data= fetchGet("./search.php?code="+params)
+//   console.log(data);
+//     //  fetch(`./search.php?code=${params}`)
+//     // .then(response => response.json())
+//     // .then(data => displaySearchResults(data))
+//     // .catch(error => console.error('Error searching product:', error));                                      
+// }
 function displaySearchResults(data) {
     const resultContainer = document.getElementById('resultContainer');
     if (resultContainer) {
@@ -826,7 +928,20 @@ function displaySearchResults(data) {
         <p><strong>Etat de cargaison:</strong> ${cargo.etatCargaison}</p>
         <p><strong>Etat d'avancement:</strong> ${cargo.etatAvencement}</p>
         <p><strong>Distance:</strong> ${cargo.distance} km</p>
+        <p><strong>Date d'arrivée:</strong> ${cargo.arrive[1]}</p>
       `;
+            if (product.etat === 'en cours') {
+                const today = new Date();
+                const arrivalDate = new Date(cargo.arrive[1]);
+                const timeDiff = arrivalDate.getTime() - today.getTime();
+                const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                if (timeDiff > 0) {
+                    resultItem.innerHTML += `<p><strong>Le produit arrivera dans:</strong> ${dayDiff} jour(s)</p>`;
+                }
+                else {
+                    resultItem.innerHTML += `<p><strong>Le produit est en retard de:</strong> ${-dayDiff} jour(s)</p>`;
+                }
+            }
             resultContainer.appendChild(resultItem);
         }
         else {
@@ -835,5 +950,157 @@ function displaySearchResults(data) {
     }
 }
 // Expose functions globally (if needed)
-window.searchProductByCode = searchProductByCode;
 window.displaySearchResults = displaySearchResults;
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('searchForm');
+    if (form) {
+        form.addEventListener('submit', (event) => __awaiter(void 0, void 0, void 0, function* () {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const params = new URLSearchParams(formData).toString();
+            const url = `./search.php?${params}`;
+            try {
+                const data = yield fetchGet(url);
+                displaySearchResults(data);
+                showNotification('Recherche effectuée avec succès.', 'modern');
+                showError('Erreur lors de la recherche du produit.');
+                showNotification('Recherche effectuée avec succès.', 'classic');
+            }
+            catch (error) {
+                console.error('Error searching product:', error);
+                showNotification('Erreur lors de la recherche du produit.', 'classic');
+            }
+        }));
+    }
+});
+// function showError(message: string) {
+//   const container = document.getElementById('notificationContainer');
+//   if (container) {
+//       const errorMessage = document.createElement('div');
+//       errorMessage.className = 'error-message';
+//       errorMessage.innerHTML = `
+//           <span>${message}</span>
+//           <span class="close">&times;</span>
+//       `;
+//       container.appendChild(errorMessage);
+//       // Show error message
+//       setTimeout(() => {
+//           errorMessage.classList.add('show');
+//       }, 10);
+//       // Add close event
+//       errorMessage.querySelector('.close')?.addEventListener('click', () => {
+//           hideNotification(errorMessage);
+//       });
+//       // Auto-hide error message after 5 seconds
+//       setTimeout(() => {
+//           hideNotification(errorMessage);
+//       }, 5000);
+//   }
+// }
+function fetchGet(url) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = yield response.json();
+            return data;
+        }
+        catch (error) {
+            throw error;
+        }
+    });
+}
+const fermeModifCarg = document.getElementById("closeModEdit");
+fermeModifCarg.addEventListener("click", () => fermMod("editDatesModal"));
+// function showNotification(message: string, type: 'classic' | 'modern') {
+//   const container = document.getElementById('notificationContainer');
+//   if (container) {
+//       const notification = document.createElement('div');
+//       notification.className = `notification ${type}`;
+//       notification.innerHTML = `
+//           <span>${message}</span>
+//           <span class="close">&times;</span>
+//       `;
+//       container.appendChild(notification);
+//       // Show notification
+//       setTimeout(() => {
+//           notification.classList.add('show');
+//       }, 10);
+//       // Add close event
+//       notification.querySelector('.close')?.addEventListener('click', () => {
+//           hideNotification(notification);
+//       });
+//       // Auto-hide notification after 3 seconds
+//       setTimeout(() => {
+//           hideNotification(notification);
+//       }, 3000);
+//   }
+// }
+// function hideNotification(notification: HTMLElement) {
+//   notification.classList.add('fade-out');
+//   notification.addEventListener('animationend', () => {
+//       notification.remove();
+//   });
+// }
+function ouvreMod(modalId) {
+    document.getElementById(modalId).classList.remove('hidden');
+}
+function fermMod(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+}
+const editDatesForm = document.getElementById('editDatesForm');
+if (editDatesForm) {
+    editDatesForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (bd.cargo[idC].etatAvencement == "arrive" || bd.cargo[idC].etatAvencement == "perdu") {
+            showError("impossible de faire une modification cargaison est à l'etat " + bd.cargo[idC].etatAvencement);
+            return 2;
+        }
+        paginate(bd.cargo, npage, 4, table, returCarg);
+        let formData = getFormData(editDatesForm);
+        let errors = validateForm(formData);
+        if (bd.cargo[idC].etatAvencement != "attente") {
+            if (errors.length > 1) {
+                const dontDisplay = document.getElementById("error-dateDep2");
+                displayErrors(errors);
+                console.log(dontDisplay);
+                dontDisplay.innerText = "";
+                showError("verifier les champs");
+                return 1;
+            }
+            bd.cargo[idC].arrive[1] = formData.dateAr2;
+            saveCargaison(bd);
+            fermMod("editDatesModal");
+            displayDetails(bd.cargo[idC], idC);
+            showNotification("modification cargaison reussi ", "classic");
+            editDatesForm.reset();
+            return 2;
+        }
+        clearErrors();
+        if (errors.length > 0) {
+            displayErrors(errors);
+            showError("verifier les champs");
+        }
+        else {
+            console.log(bd.cargo[idC].arrive[1]);
+            console.log(bd.cargo[idC].depart[1]);
+            bd.cargo[idC].arrive[1] = formData.dateAr2;
+            bd.cargo[idC].depart[1] = formData.dateDep2;
+            // sendMail(bd.cargo[idC].produits[id][0])
+            console.log(bd.cargo[idC].arrive[1]);
+            console.log(bd.cargo[idC].depart[1]);
+            saveCargaison(bd);
+            fermMod("editDatesModal");
+            displayDetails(bd.cargo[idC], idC);
+            showNotification("modification cargaison reussi ", "classic");
+            editDatesForm.reset();
+        }
+    });
+}
