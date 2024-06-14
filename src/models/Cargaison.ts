@@ -1,3 +1,4 @@
+import { showNotification,showError } from '../funct.js';
 const config = {
   pra: 100,
   prm: 200,
@@ -11,7 +12,7 @@ const config = {
 export abstract class Cargaison {
   protected produits: Produit[] = [];
 
-  protected id = 0;
+  protected id :number = 0;
   protected etatAvencement: string = "attente";
   protected etatCargaison: string = "ouverte";
   protected type : string = ""
@@ -45,6 +46,7 @@ export abstract class Cargaison {
       produits: this.produits,
       id: this.id,
       type: this.type
+
     };
   }
   set ids(id: number) { this.id = id; }
@@ -57,10 +59,22 @@ export abstract class Cargaison {
   }
   abstract get getType(): string;
   ajouterProduit(produit: Produit): void {
-    if (this.produits.length >= 10) {
-      console.log("La cargaison est pleine. Impossible d'ajouter plus de produits.");
-      return;
-    }
+    if (this.limite == "poids") {
+      const poidsTotal = this.produits.reduce((total, produit) => total + produit.getPoids(), 0);
+      const poidsNouveauProduit = produit.getPoids();
+      console.log(poidsTotal);
+      if (poidsTotal + poidsNouveauProduit > this.limiteValue) {
+        showError("Impossible d'ajouter le produit. La cargaison atteindra sa limite de poids.");
+        return;
+      }
+    } else{
+      console.log(this.produits+"="+this.limiteValue)
+      if (this.produits.length >= this.limiteValue) {
+        showError("La cargaison est pleine. Impossible d'ajouter plus de produits.");
+        return;
+      }
+    } 
+    
 
     const coutProduit = this.calculerFrais(produit);
     this.produits.push(produit);
@@ -102,7 +116,7 @@ export class Aerienne extends Cargaison {
 
   ajouterProduit(produit: Produit): void {
     if (produit instanceof Chimique) {
-      console.log("Les produits chimiques ne peuvent pas être transportés par voie aérienne.");
+      showError("Les produits chimiques ne peuvent pas être transportés par voie aérienne.");
       return;
     }
     super.ajouterProduit(produit);
@@ -132,7 +146,7 @@ export class Maritime extends Cargaison {
 
   ajouterProduit(produit: Produit): void {
     if (produit instanceof Fragile) {
-      console.log("Les produits fragiles ne peuvent pas être transportés par voie maritime.");
+      showError("Les produits fragiles ne peuvent pas être transportés par voie maritime.");
       return;
     }
     super.ajouterProduit(produit);
@@ -163,7 +177,7 @@ export class Routiere extends Cargaison {
 
   ajouterProduit(produit: Produit): void {
     if (produit instanceof Chimique) {
-      console.log("Les produits chimiques ne peuvent pas être transportés par voie terrestre.");
+      showError("Les produits chimiques ne peuvent pas être transportés par voie terrestre.");
       return;
     }
     super.ajouterProduit(produit);
@@ -179,10 +193,20 @@ export class Routiere extends Cargaison {
 
 
 export abstract class Produit {
+ protected tarif: number = 0;
+ set starif(value: number){this.tarif = value}
+ get gtarif(): number {return this.tarif}
+  protected code: string=""
   protected id = 0;
+  protected etat: string ="attente"
+  set setEtat(etat: string) {this.etat = etat}
+  get getEtat(): string {return this.etat}
   set ids(id: number) { this.id = id; }
   get idg(): number { return this.id; }
-  constructor(protected libelle: string, protected poids: number) { }
+  get getCode(): string { return this.code; }
+  set setCode(code: string) { this.code = code; }
+  constructor(protected libelle: string, protected poids: number,protected sender :client,protected receiver:client) { }
+
   abstract info(): string;
 
   getLibelle(): string {
@@ -193,12 +217,25 @@ export abstract class Produit {
     return this.poids;
   }
 
+
   setLibelle(libelle: string): void {
     this.libelle = libelle;
   }
 
   setPoids(poids: number): void {
     this.poids = poids;
+  }
+  set setSender(sender: client) {
+    this.sender = sender;
+  }
+  get getSender(): client {
+    return this.sender;
+  }
+  set setReceiver(receiver: client) {
+    this.receiver = receiver;
+  }
+  getReceiver(): client {
+    return this.receiver;
   }
 }
 //
@@ -216,8 +253,8 @@ export class Alimentaire extends Produit {
 export class Chimique extends Produit {
   private toxicite: number;
 
-  constructor(libelle: string, poids: number, toxicite: number) {
-    super(libelle, poids);
+  constructor(libelle: string, poids: number, toxicite: number,sender: client,receiver: client) {
+    super(libelle, poids,sender,receiver);
     this.toxicite = toxicite;
   }
 
@@ -237,8 +274,8 @@ export class Chimique extends Produit {
 //
 
 export abstract class Materiel extends Produit {
-  constructor(libelle: string, poids: number) {
-    super(libelle, poids);
+  constructor(libelle: string, poids: number, sender: client, receiver: client) {
+    super(libelle, poids, sender, receiver);
   }
 
   abstract info(): string;
@@ -262,4 +299,26 @@ export class Incassable extends Materiel {
     return inf;
     console.log(`Incassable: ${this.libelle}, Poids: ${this.poids}`);
   }
+}
+
+export class client {
+ 
+  constructor( 
+    private nom: string,
+    private prenom: string,
+    private adresse: string,
+    private mail: string,
+    private telephone: number) {
+    
+  }
+  get getObjet(): object {
+    return {
+      nom: this.nom,
+      prenom: this.prenom,
+      adresse: this.adresse,
+      mail: this.mail,
+      telephone: this.telephone,
+    }
+  }
+
 }

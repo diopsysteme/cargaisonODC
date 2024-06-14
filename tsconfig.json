@@ -6,8 +6,12 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",    // Ajouté pour résoudre les modules comme 'jspdf'
+    "baseUrl": "./src",            // Définir la base des chemins absolus
+    "paths": {                     // Ajouter des chemins pour les modules
+      "*": ["node_modules/*"]
+    }
   },
   "include": ["src"]
 }
-  

@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
-  $file = DATAS;
+  $file = DATA;
 
   if (file_put_contents($file, json_encode($decoded, JSON_PRETTY_PRINT))) {
     echo json_encode(['message' => 'Data saved successfully']);
