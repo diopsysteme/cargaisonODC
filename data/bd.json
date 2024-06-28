@@ -1,6 +1,71 @@
 {
     "cargo": [
         {
+            "libelle": "djdhf",
+            "depart": [
+                "Throttled! See geocode.xyz\/pricing",
+                "2024-06-23"
+            ],
+            "arrive": [
+                "Thi\u00e8s",
+                "2024-06-30"
+            ],
+            "limite": "poids",
+            "limiteValue": 22,
+            "etatAvencement": "perdu",
+            "etatCargaison": "fermee",
+            "distance": 52.46,
+            "tarif": 0,
+            "produits": [
+                [
+                    {
+                        "libelle": "ZZ",
+                        "poids": "22",
+                        "sender": {
+                            "nom": "SS",
+                            "prenom": "SSS",
+                            "adresse": "SS",
+                            "mail": "dioprassoul0405@gmail.com",
+                            "telephone": "776471743"
+                        },
+                        "receiver": {
+                            "nom": "Wane",
+                            "prenom": "Baila",
+                            "adresse": "Dakar",
+                            "mail": "douwane85@gmail.com",
+                            "telephone": "777777777"
+                        },
+                        "tarif": 103870.80000000002,
+                        "code": "iRxT-C12",
+                        "id": 0,
+                        "etat": "perdu"
+                    }
+                ]
+            ],
+            "id": 12,
+            "type": "Maritime"
+        },
+        {
+            "libelle": "ssss",
+            "depart": [
+                "Throttled! See geocode.xyz\/pricing",
+                "2024-06-23"
+            ],
+            "arrive": [
+                "Pikine",
+                "2024-06-30"
+            ],
+            "limite": "poids",
+            "limiteValue": 22,
+            "etatAvencement": "attente",
+            "etatCargaison": "ouverte",
+            "distance": 50.08,
+            "tarif": 0,
+            "produits": [],
+            "id": 11,
+            "type": "Maritime"
+        },
+        {
             "libelle": "dd",
             "depart": [
                 "Throttled! See geocode.xyz\/pricing",
@@ -241,54 +306,6 @@
             "produits": [
                 [
                     {
-                        "libelle": "Promotion 3",
-                        "poids": "22",
-                        "sender": {
-                            "nom": "lam",
-                            "prenom": "lam",
-                            "adresse": "",
-                            "mail": "dioprassoul0405@gmail.com",
-                            "telephone": ""
-                        },
-                        "receiver": {
-                            "nom": ",jsdjhsd",
-                            "prenom": "shsjd",
-                            "adresse": "",
-                            "mail": "dioprassoul0405@gmail.com",
-                            "telephone": ""
-                        },
-                        "tarif": 98267.40000000001,
-                        "code": "hCb7-C5",
-                        "id": 0,
-                        "etat": "arrive"
-                    }
-                ],
-                [
-                    {
-                        "libelle": "CC",
-                        "poids": "22",
-                        "sender": {
-                            "nom": "",
-                            "prenom": "",
-                            "adresse": "",
-                            "mail": "dioprassoul0405@gmail.com",
-                            "telephone": ""
-                        },
-                        "receiver": {
-                            "nom": "",
-                            "prenom": "",
-                            "adresse": "",
-                            "mail": "dioprassoul0405@gmail.com",
-                            "telephone": ""
-                        },
-                        "tarif": 98267.40000000001,
-                        "code": "uiVV-C5",
-                        "id": 0,
-                        "etat": "arrive"
-                    }
-                ],
-                [
-                    {
                         "libelle": "fff",
                         "poids": "22",
                         "sender": {
@@ -308,7 +325,7 @@
                         "tarif": 98267.40000000001,
                         "code": "E8Db-C5",
                         "id": 0,
-                        "etat": "recupere"
+                        "etat": "archive"
                     }
                 ]
             ],
