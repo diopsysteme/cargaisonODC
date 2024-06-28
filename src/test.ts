@@ -5,28 +5,28 @@ declare var bd: any;
 // src/index.ts
 async function sendSMS(to: string, text: string) {
   const response = await fetch('./message.php', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-          to: to,
-          text: text
-      })
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      to: to,
+      text: text
+    })
   });
 
   const data = await response.json();
 
   if (data.status === 'success') {
-      console.log(data.message);
+    console.log(data.message);
   } else {
-      console.error(data.message);
+    console.error(data.message);
   }
 }
 
 var cargaisons: Cargaison[] = bd.cargo!;
-var npage : number = 1
-var eleBypage : number =4
+var npage: number = 1
+var eleBypage: number = 4
 function sendMail(produit: any) {
   fetch('./msimple.php', {
     method: 'POST',
@@ -261,9 +261,9 @@ function validateForm(data: { [key: string]: any }): { field: string, message: s
 
   const departureDate = data.dateDep ? new Date(data.dateDep) : new Date(data.dateDep2);
   const arrivalDate = data.dateAr ? new Date(data.dateAr) : new Date(data.dateAr2);
-  
+
   const currentDate = new Date();
-console.log(departureDate, arrivalDate);
+  console.log(departureDate, arrivalDate);
 
   const normalizeDate = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
   const normalizedDepartureDate = normalizeDate(departureDate);
@@ -273,7 +273,7 @@ console.log(departureDate, arrivalDate);
   // console.log('Departure Date:', normalizedDepartureDate);
   // console.log('Arrival Date:', normalizedArrivalDate);
   // console.log('Current Date:', normalizedCurrentDate);
-  let fielddep=data.dateDep ? "dateDep" : "dateDep2";
+  let fielddep = data.dateDep ? "dateDep" : "dateDep2";
   let fieldAr = data.dateAr ? "dateAr" : "dateAr2";
 
   if (isNaN(departureDate.getTime())) {
@@ -471,13 +471,13 @@ function generatePaginationLinks(nombrePage: number, currentPage: number): strin
 function changePage(event: Event, tab: Cargaison[], nel: number, table: HTMLTableElement, tr: (cargaison: Cargaison) => string): void {
   event.preventDefault();
   const target = event.target as HTMLElement;
-   npage = parseInt(target.id);
+  npage = parseInt(target.id);
 
   if (npage < 1 || npage > Math.ceil(tab.length / nel)) return;
 
   paginate(tab, npage, nel, table, tr);
 }
-const filteInp = document.querySelectorAll(".filteInp")! as NodeListOf <HTMLInputElement>
+const filteInp = document.querySelectorAll(".filteInp")! as NodeListOf<HTMLInputElement>
 // filteInp.forEach((el) =>{
 //   el.addEventListener("input",(e)=>formFilter.submit)
 // })
@@ -595,7 +595,7 @@ addProduct?.addEventListener("submit", function (event) {
     // console.log(inst)
 
   }
-  
+
   console.log(prod)
 
   const newId: string = generateUniqueCode(4) + "-C" + cargoData.id
@@ -783,8 +783,8 @@ function cargAct() {
       const idCargo = parseInt(input.id)
       // alert(idCargo)
       // concole.log(bd.cargo[idCargo].etatCargaison)
-      if(bd.cargo[idCargo].etatAvencement!="attente"){
-        showError("impossible d'ouvrir la cargaison elle est à :"+bd.cargo[idCargo].etatAvencement)
+      if (bd.cargo[idCargo].etatAvencement != "attente") {
+        showError("impossible d'ouvrir la cargaison elle est à :" + bd.cargo[idCargo].etatAvencement)
         paginate(bd.cargo, npage, 4, table, returCarg);
         return 2
       }
@@ -804,12 +804,12 @@ function cargAct() {
     sele.addEventListener("change", () => {
       const idCargo = parseInt(sele.id)
       console.log(bd.cargo[idCargo].produits.length);
-      
-       if( bd.cargo[idCargo].produits.length==0){
-        showError("la cargaison est vide on ne peut le mettre à : "+sele.value)
+
+      if (bd.cargo[idCargo].produits.length == 0) {
+        showError("la cargaison est vide on ne peut le mettre à : " + sele.value)
         paginate(bd.cargo, npage, 4, table, returCarg);
         return 2
-       }
+      }
       bd.cargo[idCargo].etatAvencement = sele.value
       paginate(bd.cargo, npage, 4, table, returCarg);
       bd.cargo[idCargo].produits.forEach((sousListe: any[], sousListeIndex: Number) => {
@@ -997,25 +997,25 @@ function displayDetails(details: any, id: number) {
       idC = parseInt(button.id)
       console.log(idC);
       alert(idC)
-      console.log( document.getElementById("editDatesModal"));
+      console.log(document.getElementById("editDatesModal"));
       const butto = editDatesForm.querySelector("button")
       console.log(butto);
-      
+
       document.getElementById("editDatesModal")!.classList.remove('hidden');
       ouvreMod("editDatesModal")
       const dep = document.getElementById("dateDep2") as HTMLInputElement
       const ar = document.getElementById("dateAr2") as HTMLInputElement
       ar.classList.remove('desactive');
       dep.classList.remove('desactive');
-      dep.value=bd.cargo[idC].depart[1]
-      ar.value=bd.cargo[idC].arrive[1]
-      if(bd.cargo[idC].etatAvencement=="arrive"||bd.cargo[idC].etatAvencement=="perdu"){
-          dep.value=bd.cargo[idC].depart[1]
-          ar.value=bd.cargo[idC].arrive[1]
-          ar.classList.add('desactive');
-          dep.classList.add('desactive');
-          showError("impossible de faire une modification cargaison est à l'etat "+bd.cargo[idC].etatAvencement)
-      }else if(bd.cargo[idC].etatAvencement=="en cours"){
+      dep.value = bd.cargo[idC].depart[1]
+      ar.value = bd.cargo[idC].arrive[1]
+      if (bd.cargo[idC].etatAvencement == "arrive" || bd.cargo[idC].etatAvencement == "perdu") {
+        dep.value = bd.cargo[idC].depart[1]
+        ar.value = bd.cargo[idC].arrive[1]
+        ar.classList.add('desactive');
+        dep.classList.add('desactive');
+        showError("impossible de faire une modification cargaison est à l'etat " + bd.cargo[idC].etatAvencement)
+      } else if (bd.cargo[idC].etatAvencement == "en cours") {
         dep.classList.add('desactive');
       }
     })
@@ -1161,7 +1161,7 @@ async function fetchGet(url: string): Promise<any> {
   }
 }
 const fermeModifCarg = document.getElementById("closeModEdit")!
-fermeModifCarg.addEventListener("click",() => fermMod("editDatesModal"))
+fermeModifCarg.addEventListener("click", () => fermMod("editDatesModal"))
 // function showNotification(message: string, type: 'classic' | 'modern') {
 //   const container = document.getElementById('notificationContainer');
 //   if (container) {
@@ -1198,63 +1198,63 @@ fermeModifCarg.addEventListener("click",() => fermMod("editDatesModal"))
 //   });
 // }
 
-function ouvreMod(modalId:string):void {
+function ouvreMod(modalId: string): void {
   document.getElementById(modalId)!.classList.remove('hidden');
 }
 
-function fermMod(modalId:string):void {
+function fermMod(modalId: string): void {
   document.getElementById(modalId)!.classList.add('hidden');
 }
 
 const editDatesForm = document.getElementById('editDatesForm') as HTMLFormElement;
 if (editDatesForm) {
-    editDatesForm.addEventListener('submit', function(event: Event) {
-        event.preventDefault();
-        if(bd.cargo[idC].etatAvencement=="arrive"||bd.cargo[idC].etatAvencement=="perdu"){
-          showError("impossible de faire une modification cargaison est à l'etat "+bd.cargo[idC].etatAvencement)
-          return 2
-      }
-      paginate(bd.cargo, npage, 4, table, returCarg);
-        let formData = getFormData(editDatesForm);
-        let errors = validateForm(formData);
+  editDatesForm.addEventListener('submit', function (event: Event) {
+    event.preventDefault();
+    if (bd.cargo[idC].etatAvencement == "arrive" || bd.cargo[idC].etatAvencement == "perdu") {
+      showError("impossible de faire une modification cargaison est à l'etat " + bd.cargo[idC].etatAvencement)
+      return 2
+    }
+    paginate(bd.cargo, npage, 4, table, returCarg);
+    let formData = getFormData(editDatesForm);
+    let errors = validateForm(formData);
 
-        if(bd.cargo[idC].etatAvencement!="attente"){
-          if (errors.length > 1) {
-            const dontDisplay = document.getElementById("error-dateDep2")!  as HTMLDivElement
-            displayErrors(errors);
-            console.log(dontDisplay);
-            
-            dontDisplay.innerText = ""
-            showError("verifier les champs")
-            return 1
-          }
-          bd.cargo[idC].arrive[1]=formData.dateAr2
-          saveCargaison(bd)
-          fermMod("editDatesModal")
-          displayDetails(bd.cargo[idC], idC);
-          showNotification("modification cargaison reussi ","classic") 
-          editDatesForm.reset();
-          return 2
-        }
-        clearErrors();
-    
-        if (errors.length > 0) {
-          displayErrors(errors);
-          showError("verifier les champs")
-        }else{
-          console.log(bd.cargo[idC].arrive[1]);
-          console.log(bd.cargo[idC].depart[1]);
-          bd.cargo[idC].arrive[1]=formData.dateAr2
-          bd.cargo[idC].depart[1]=formData.dateDep2
-          // sendMail(bd.cargo[idC].produits[id][0])
-          console.log(bd.cargo[idC].arrive[1]);
-          console.log(bd.cargo[idC].depart[1]);
+    if (bd.cargo[idC].etatAvencement != "attente") {
+      if (errors.length > 1) {
+        const dontDisplay = document.getElementById("error-dateDep2")! as HTMLDivElement
+        displayErrors(errors);
+        console.log(dontDisplay);
+
+        dontDisplay.innerText = ""
+        showError("verifier les champs")
+        return 1
+      }
+      bd.cargo[idC].arrive[1] = formData.dateAr2
       saveCargaison(bd)
       fermMod("editDatesModal")
       displayDetails(bd.cargo[idC], idC);
-      showNotification("modification cargaison reussi ","classic")  
+      showNotification("modification cargaison reussi ", "classic")
       editDatesForm.reset();
-        }
-        
-    });
+      return 2
+    }
+    clearErrors();
+
+    if (errors.length > 0) {
+      displayErrors(errors);
+      showError("verifier les champs")
+    } else {
+      console.log(bd.cargo[idC].arrive[1]);
+      console.log(bd.cargo[idC].depart[1]);
+      bd.cargo[idC].arrive[1] = formData.dateAr2
+      bd.cargo[idC].depart[1] = formData.dateDep2
+      // sendMail(bd.cargo[idC].produits[id][0])
+      console.log(bd.cargo[idC].arrive[1]);
+      console.log(bd.cargo[idC].depart[1]);
+      saveCargaison(bd)
+      fermMod("editDatesModal")
+      displayDetails(bd.cargo[idC], idC);
+      showNotification("modification cargaison reussi ", "classic")
+      editDatesForm.reset();
+    }
+
+  });
 }

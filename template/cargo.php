@@ -165,11 +165,11 @@ $dataPH = json_decode($jsonContent, true);
           </div>
           <div class="mb-4">
             <label for="sender_mail" class="block text-gray-700">Email</label>
-            <input type="email" id="sender_mail" name="sender_mail" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="email" id="sender_mail" name="sender_mail" class=" mail w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
           <div class="mb-4">
             <label for="sender_telephone" class="block text-gray-700">Téléphone</label>
-            <input type="tel" id="sender_telephone" name="sender_telephone" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="tel" id="sender_telephone" name="sender_telephone" class=" numero w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
           <div class="flex justify-between space-x-4">
             <button type="button" onclick="previousStep('step2', 'step1')" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">Précédent</button>
@@ -190,11 +190,11 @@ $dataPH = json_decode($jsonContent, true);
           </div>
           <div class="mb-4">
             <label for="receiver_adresse" class="block text-gray-700">Adresse</label>
-            <input type="text" id="receiver_adresse" name="receiver_adresse" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="receiver_adresse"  name="receiver_adresse" class="numero w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
           <div class="mb-4">
             <label for="receiver_mail" class="block text-gray-700">Email</label>
-            <input type="email" id="receiver_mail" name="receiver_mail" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="email" id="receiver_mail" name="receiver_mail" class="mail w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
           <div class="mb-4">
             <label for="receiver_telephone" class="block text-gray-700">Téléphone</label>
